@@ -11,7 +11,7 @@ function About() {
         <img src="Hammer-and-tongs.png" alt="" className="our-motto-img" />
         <p className="our-motto-heading">OUR MOTTO</p>
         <p className="our-motto-verse">
-          "Whatsoever thy hand findeth to do, do it with thy might something"
+          "Whatsoever thy hand findeth to do, do it with thy might"
         </p>
         <p className="our-motto-cite">- Ecclesiastes 9:10</p>
       </div>
