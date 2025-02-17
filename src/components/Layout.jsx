@@ -55,7 +55,7 @@ const Layout = () => {
               <div className="links">
                 <Link to="/">Home</Link>
                 <Link to="/about">About</Link>
-                {/*}<Link to="/under-construction">Meet Us</Link> {*/}
+                <Link to="/brothers">Meet Us</Link>
                 <Link to="/social">Social</Link>
                 <Link to="/professionalism">Professionalism</Link>
                 <Link to="/service">Service</Link>

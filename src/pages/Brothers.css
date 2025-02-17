@@ -82,16 +82,12 @@
   font-size: 1.25rem;
 }
 
-.brother-section {
-}
-
 .brothers {
   padding: 5vh 0;
 }
 
-@media (max-width: 768px) {
-  /* Adjust breakpoint as needed */
+@media (max-width: 850px) { 
   .brother-cards {
-    padding: 0; /* Remove padding on mobile */
+    padding: 0;
   }
 }

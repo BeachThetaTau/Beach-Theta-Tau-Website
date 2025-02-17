@@ -148,9 +148,9 @@ const Profile = () => {
   const getPfpPath = () => {
     if (userData?.verified) {
       const name = userData.name
-        ? userData.name.replace(/[^a-zA-Z]/g, "")
+        ? userData.name.replace(/[^a-zA-Z]/g, "").toLowerCase()
         : "blankpfp";
-      return `Brothers/${name}.webp`;
+      return `/Brothers/${name}.webp`;
     }
     return "/Brothers/blankpfp.webp";
   };

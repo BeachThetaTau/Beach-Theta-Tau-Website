@@ -15,6 +15,7 @@ interface User {
   linkedIn?: string;
   resumeLink?: string;
   position?: string;
+  verified?: boolean; // Add this field
 }
 
 const baseGreekAlphabet = [
@@ -69,6 +70,12 @@ const generateExtendedGreekAlphabet = (
 };
 
 const greekAlphabetOrder = generateExtendedGreekAlphabet(baseGreekAlphabet, 2);
+
+const generatePfpUrl = (name: string): string => {
+  // Remove non-alphabet characters and convert to lowercase
+  const cleanedName = name.replace(/[^a-zA-Z]/g, "").toLowerCase();
+  return `/Brothers/${cleanedName}.webp`;
+};
 
 function Brothers() {
   const [usersByClass, setUsersByClass] = useState<Record<string, User[]>>(
@@ -141,7 +148,14 @@ function Brothers() {
             <div className="modal-container">
               <button onClick={() => setIsModalOpen(false)}>&times;</button>
               <div className="modal-content">
-                <img src="Brothers/blank-pfp.webp" alt="" />
+                <img
+                  src={
+                    selectedUser.verified
+                      ? generatePfpUrl(selectedUser.name)
+                      : "/Brothers/blank-pfp.webp"
+                  }
+                  alt=""
+                />
                 <div className="modal-details">
                   <h2>{selectedUser.name}</h2>
                   {selectedUser.position && (
@@ -180,7 +194,11 @@ function Brothers() {
                         style={{ cursor: "pointer" }}
                       >
                         <img
-                          src="/Brothers/blank-pfp.webp"
+                          src={
+                            user.verified
+                              ? generatePfpUrl(user.name)
+                              : "/Brothers/blank-pfp.webp"
+                          }
                           alt={`${user.name}'s profile`}
                         />
                         <h1>{user.name}</h1>
@@ -208,7 +226,11 @@ function Brothers() {
                       style={{ cursor: "pointer" }}
                     >
                       <img
-                        src="/Brothers/blank-pfp.webp"
+                        src={
+                          user.verified
+                            ? generatePfpUrl(user.name)
+                            : "/Brothers/blank-pfp.webp"
+                        }
                         alt={`${user.name}'s profile`}
                       />
                       <h1>{user.name}</h1>
@@ -231,7 +253,11 @@ function Brothers() {
                       style={{ cursor: "pointer" }}
                     >
                       <img
-                        src="/Brothers/blank-pfp.webp"
+                        src={
+                          user.verified
+                            ? generatePfpUrl(user.name)
+                            : "/Brothers/blank-pfp.webp"
+                        }
                         alt={`${user.name}'s profile`}
                       />
                       <h1>{user.name}</h1>

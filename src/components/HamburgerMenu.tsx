@@ -40,6 +40,17 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ user }) => {
                 About
               </Link>
             </li>
+
+            <li className="menu__group">
+              <Link
+                to="/brothers"
+                className="menu__link ra-link"
+                onClick={closeMenu}
+              >
+                Meet Us
+              </Link>
+            </li>
+
             <li className="menu__group">
               <Link
                 to="/social"

@@ -10,6 +10,7 @@ import Apply from "./pages/Apply";
 import Login from "./pages/Login"; // Ensure this is a .tsx file
 import Signup from "./pages/Signup"; // Ensure this is a .tsx file
 import Profile from "./pages/Profile"; // Ensure this is a .tsx file
+import Brothers from "./pages/Brothers";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/brothers" element={<Brothers />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/about" element={<About />} />
           <Route path="/social" element={<Social />} />
