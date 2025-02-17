@@ -15,7 +15,7 @@ interface User {
   linkedIn?: string;
   resumeLink?: string;
   position?: string;
-  verified?: boolean; // Add this field
+  verified?: boolean;
 }
 
 const baseGreekAlphabet = [
@@ -72,7 +72,6 @@ const generateExtendedGreekAlphabet = (
 const greekAlphabetOrder = generateExtendedGreekAlphabet(baseGreekAlphabet, 2);
 
 const generatePfpUrl = (name: string): string => {
-  // Remove non-alphabet characters and convert to lowercase
   const cleanedName = name.replace(/[^a-zA-Z]/g, "").toLowerCase();
   return `/Brothers/${cleanedName}.webp`;
 };
@@ -83,7 +82,7 @@ function Brothers() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [showOfficers, setShowOfficers] = useState(false); // Toggle state
+  const [showOfficers, setShowOfficers] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -129,9 +128,9 @@ function Brothers() {
   const eboardMembers = allUsers
     .filter((user) => user.position && eboard.includes(user.position))
     .sort((a, b) => eboard.indexOf(a.position!) - eboard.indexOf(b.position!));
-  const chairs = allUsers.filter(
-    (user) => user.position && !eboard.includes(user.position)
-  );
+  const chairs = allUsers
+    .filter((user) => user.position && !eboard.includes(user.position))
+    .sort((a, b) => a.position!.localeCompare(b.position!)); // Sorted alphabetically
 
   return (
     <>
@@ -177,7 +176,6 @@ function Brothers() {
           )}
         </Modal>
 
-        {/* Conditionally render Actives or Officers */}
         {!showOfficers ? (
           <div className="brothers-list">
             {greekAlphabetOrder
