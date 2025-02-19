@@ -20,11 +20,9 @@ const Layout = () => {
       if (user) {
         // User is signed in, update the user state
         setUser(user);
-        console.log("uid", user.uid);
       } else {
         // User is signed out, set user state to null
         setUser(null);
-        console.log("user is logged out");
       }
     });
 

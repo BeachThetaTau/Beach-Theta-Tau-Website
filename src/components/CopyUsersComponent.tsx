@@ -54,8 +54,6 @@ const CopyUsersComponent = () => {
       if (batchCount > 0) {
         await batch.commit();
       }
-
-      console.log("Users copied to verifiedUsers successfully.");
     } catch (error) {
       console.error("Error copying users to verifiedUsers:", error);
     } finally {

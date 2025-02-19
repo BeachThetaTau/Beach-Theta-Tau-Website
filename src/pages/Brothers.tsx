@@ -102,6 +102,7 @@ function Brothers() {
             userData.class &&
             greekAlphabetOrder.includes(userData.class)
           ) {
+            console.log("User Name:", userData.name);
             updatedUsersMap[userData.class].push(userData);
           }
         });
