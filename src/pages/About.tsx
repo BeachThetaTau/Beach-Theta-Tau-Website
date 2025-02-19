@@ -1,6 +1,7 @@
 import "./About.css";
 import GenerateParallax from "../components/PillarsParallax";
 import ResponsiveButton from "../components/ResponsiveButton";
+import MajorBreakdown from "../MajorBreakdown";
 
 function About() {
   return (
@@ -60,6 +61,8 @@ function About() {
           className="founders"
         />
       </div>
+
+      <MajorBreakdown/>
     </>
   );
 }

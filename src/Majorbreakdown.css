@@ -1,0 +1,22 @@
+.graph-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 80vw;
+  height: 70vh;
+  padding-left: 15vw;
+}
+
+.major-breakdown {
+  background-color: #ececec;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.major-breakdown h3 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #7f170e;
+  padding-left: 15vw;
+  padding-bottom: 2rem;
+}
