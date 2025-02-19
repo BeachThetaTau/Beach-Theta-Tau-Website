@@ -79,22 +79,64 @@ const Profile = () => {
     setEditedData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  const validateData = () => {
+  // Helper function to convert a string to title case
+  const toTitleCase = (str) => {
+    return str
+      .split(" ")
+      .filter((word) => word.length > 0)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
+
+  // Helper function to clean the input data
+  const cleanData = (data) => {
+    const cleaned = {};
+    for (const key in data) {
+      let value = data[key];
+      if (typeof value === "string") {
+        // Always trim whitespace
+        value = value.trim();
+        // For the "class" field, remove trailing " class"
+        if (key === "class") {
+          if (value.toLowerCase().endsWith(" class")) {
+            value = value.substring(0, value.length - " class".length).trim();
+          }
+        }
+        // For the "major" field, convert trailing " engineer" to " engineering"
+        if (key === "major") {
+          if (value.toLowerCase().endsWith(" engineer")) {
+            value =
+              value.substring(0, value.length - " engineer".length).trim() +
+              " engineering";
+          }
+        }
+        // For "major" and "class", convert to title case
+        if (key === "major" || key === "class") {
+          value = toTitleCase(value);
+        }
+      }
+      cleaned[key] = value;
+    }
+    return cleaned;
+  };
+
+  // Updated validateData to accept data as a parameter
+  const validateData = (data) => {
     const errors = [];
 
-    if (!editedData.name || editedData.name.trim() === "") {
+    if (!data.name || data.name.trim() === "") {
       errors.push("Name is required.");
     }
 
-    if (editedData.gradYear && isNaN(editedData.gradYear)) {
+    if (data.gradYear && isNaN(data.gradYear)) {
       errors.push("Graduation year must be a number.");
     }
 
     // Validate resumeLink URL: must start with "https://" and contain ".com"
-    if (editedData.resumeLink) {
+    if (data.resumeLink) {
       if (
-        !editedData.resumeLink.startsWith("https://") ||
-        !editedData.resumeLink.includes(".com")
+        !data.resumeLink.startsWith("https://") ||
+        !data.resumeLink.includes(".com")
       ) {
         errors.push(
           "Resume link must start with 'https://' and include '.com'."
@@ -103,10 +145,10 @@ const Profile = () => {
     }
 
     // Validate linkedIn URL: must start with "https://" and contain ".com"
-    if (editedData.linkedIn) {
+    if (data.linkedIn) {
       if (
-        !editedData.linkedIn.startsWith("https://") ||
-        !editedData.linkedIn.includes(".com")
+        !data.linkedIn.startsWith("https://") ||
+        !data.linkedIn.includes(".com")
       ) {
         errors.push(
           "LinkedIn link must start with 'https://' and include '.com'."
@@ -119,13 +161,16 @@ const Profile = () => {
   };
 
   const handleSave = async () => {
-    if (!validateData()) return;
+    // Clean the edited data before validation and saving.
+    const cleanedData = cleanData(editedData);
+
+    if (!validateData(cleanedData)) return;
 
     setIsLoading(true);
     try {
       const userDocRef = doc(db, "users", user.uid);
       const updatedData = {
-        ...editedData,
+        ...cleanedData,
         email: user.email || "",
         verified: false,
         copied: false,
