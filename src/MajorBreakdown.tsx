@@ -8,8 +8,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const MajorBreakdown = () => {
   const [majors, setMajors] = useState<Record<string, number>>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMajors = async () => {
@@ -25,13 +23,21 @@ const MajorBreakdown = () => {
             majorCounts[data.major] = (majorCounts[data.major] || 0) + 1;
           }
         });
-        setMajors(majorCounts);
-        setError(null);
+
+        // Sort majors alphabetically
+        const sortedMajors = Object.keys(majorCounts)
+          .sort()
+          .reduce(
+            (acc, key) => {
+              acc[key] = majorCounts[key];
+              return acc;
+            },
+            {} as Record<string, number>
+          );
+
+        setMajors(sortedMajors);
       } catch (error) {
         console.error("Error fetching majors: ", error);
-        setError("Failed to fetch data. Please try again later.");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -77,18 +83,18 @@ const MajorBreakdown = () => {
     plugins: {
       legend: {
         labels: {
-          color: "#545454", // Legend font color
+          color: "#545454",
           font: {
-            size: 16, // Legend font size
-            family: "'alibaba-sans', sans-serif", // Font family as a string
+            size: 16,
+            family: "'alibaba-sans', sans-serif",
           },
         },
       },
       tooltip: {
         enabled: true,
-        backgroundColor: "#333333", // Tooltip background color
-        titleColor: "#ffffff", // Tooltip title color
-        bodyColor: "#ffffff", // Tooltip body color
+        backgroundColor: "#333333",
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
       },
     },
   };
@@ -96,7 +102,6 @@ const MajorBreakdown = () => {
   return (
     <div className="major-breakdown">
       <h3>Major Breakdown</h3>
-
       <div className="graph-container">
         <Doughnut data={data} options={options} />
       </div>
