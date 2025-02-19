@@ -47,18 +47,20 @@ const MajorBreakdown = () => {
   // Function to generate dynamic background colors
   const generateBackgroundColors = (count: number) => {
     const colors = [
-      "#1e90ff",
-      "#6610f2",
-      "#8a2be2",
-      "#ff69b4",
-      "#ff4d4f",
-      "#ffa500",
-      "#ffec3d",
-      "#52c41a",
-      "#20c997",
-      "#13c2c2",
-      "#ffffff",
-      "#adb5bd",
+      "#EF3063",
+      "#FDB40D",
+      "#353954",
+      "#672394",
+      "#0CB2C0",
+      "#F725A0",
+      "#3377DC",
+      "#FF5E78",
+      "#FFC857",
+      "#2E2F3A",
+      "#7A4EA3",
+      "#1DD1A1",
+      "#FF5CAF",
+      "#3498DB",
     ];
     return Array.from({ length: count }, (_, i) => colors[i % colors.length]);
   };
