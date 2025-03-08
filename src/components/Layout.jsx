@@ -8,6 +8,7 @@ import { auth } from "../firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import HamburgerMenu from "../components/HamburgerMenu";
 import Footer from "../components/Footer";
+import CopyUsersComponent from "../components/CopyUsersComponent";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const Layout = () => {
 
   return (
     <>
+      <CopyUsersComponent />
       <div className="container-fluid">
         <HamburgerMenu user={user} />
         <div className="row justify-content-center">
