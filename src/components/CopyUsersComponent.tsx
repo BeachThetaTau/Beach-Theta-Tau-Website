@@ -8,54 +8,61 @@ import {
   writeBatch,
 } from "firebase/firestore";
 
-const CopyUsersComponent = () => {
+type ConditionFunction = (userData: any) => boolean;
+
+const CopyUsersComponent = ({
+  conditionFn,
+  inputCollection,
+  outputCollection,
+}: {
+  conditionFn: ConditionFunction;
+  inputCollection: string;
+  outputCollection: string;
+}) => {
   const [loading, setLoading] = useState(false);
 
-  const copyUsersToVerifiedUsers = async () => {
+  const copyUsers = async () => {
     setLoading(true);
     try {
       const db = getFirestore();
-      const usersCollectionRef = collection(db, "users");
+      const usersCollectionRef = collection(db, inputCollection);
       const usersSnapshot = await getDocs(usersCollectionRef);
-      const batch = writeBatch(db);
-
+      let batch = writeBatch(db);
       let batchCount = 0;
 
       for (const userDoc of usersSnapshot.docs) {
         const userData = userDoc.data();
         const userId = userDoc.id;
 
-        if (userData.verified && !userData.copied) {
+        if (conditionFn(userData)) {
           const { copied, verified, ...filteredUserData } = userData;
 
-          const verifiedUserDocRef = doc(db, "verifiedUsers", userId);
-          const verifiedUserDoc = await getDoc(verifiedUserDocRef);
+          const outputUserDocRef = doc(db, outputCollection, userId);
+          const outputUserDoc = await getDoc(outputUserDocRef);
 
-          if (!verifiedUserDoc.exists() || !userData.copied) {
-            // If the user doesn't exist in verifiedUsers or copied is false, overwrite the data
-            batch.set(verifiedUserDocRef, filteredUserData);
+          if (!outputUserDoc.exists() || !userData.copied) {
+            batch.set(outputUserDocRef, filteredUserData);
 
-            // Update the 'copied' field in the original user document
-            const userDocRef = doc(db, "users", userId);
-            batch.update(userDocRef, { copied: true });
+            // Delete the original document instead of just updating
+            const userDocRef = doc(db, inputCollection, userId);
+            batch.delete(userDocRef);
 
             batchCount++;
 
-            // Commit the batch if it reaches the limit (500 operations)
             if (batchCount >= 500) {
               await batch.commit();
+              batch = writeBatch(db); // Start a new batch
               batchCount = 0;
             }
           }
         }
       }
 
-      // Commit any remaining operations in the batch
       if (batchCount > 0) {
         await batch.commit();
       }
     } catch (error) {
-      console.error("Error copying users to verifiedUsers:", error);
+      console.error("Error copying and deleting users:", error);
     } finally {
       setLoading(false);
     }
@@ -63,7 +70,7 @@ const CopyUsersComponent = () => {
 
   useEffect(() => {
     if (!loading) {
-      copyUsersToVerifiedUsers();
+      copyUsers();
     }
   }, []);
 
@@ -71,3 +78,11 @@ const CopyUsersComponent = () => {
 };
 
 export default CopyUsersComponent;
+
+{/*
+      <CopyUsersComponent
+        conditionFn={(user) => user.gradYear <= 2025}
+        inputCollection="users"
+        outputCollection="Alumni"
+      />
+*/}
