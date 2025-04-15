@@ -10,7 +10,7 @@ import {
 
 type ConditionFunction = (userData: any) => boolean;
 
-const CopyUsersComponent = ({
+const MoveDocumentsComponent = ({
   conditionFn,
   inputCollection,
   outputCollection,
@@ -77,12 +77,21 @@ const CopyUsersComponent = ({
   return <></>;
 };
 
-export default CopyUsersComponent;
+export default MoveDocumentsComponent;
 
 {/*
-      <CopyUsersComponent
-        conditionFn={(user) => user.gradYear <= 2025}
-        inputCollection="users"
-        outputCollection="Alumni"
-      />
+  // Default behavior (does NOT delete original document)
+  <MoveDocumentsComponent
+    conditionFn={(user) => user.gradYear <= 2025}
+    inputCollection="users"
+    outputCollection="Alumni"
+  />
+
+  // With deletion enabled
+  <MoveDocumentsComponent
+    conditionFn={(user) => user.gradYear <= 2025}
+    inputCollection="users"
+    outputCollection="Alumni"
+    deleteAfterCopy={true}
+  />
 */}
