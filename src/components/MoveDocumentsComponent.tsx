@@ -10,15 +10,19 @@ import {
 
 type ConditionFunction = (userData: any) => boolean;
 
+interface MoveDocumentsComponentProps {
+  conditionFn: ConditionFunction;
+  inputCollection: string;
+  outputCollection: string;
+  deleteAfterCopy?: boolean;
+}
+
 const MoveDocumentsComponent = ({
   conditionFn,
   inputCollection,
   outputCollection,
-}: {
-  conditionFn: ConditionFunction;
-  inputCollection: string;
-  outputCollection: string;
-}) => {
+  deleteAfterCopy = false,
+}: MoveDocumentsComponentProps) => {
   const [loading, setLoading] = useState(false);
 
   const copyUsers = async () => {
@@ -36,22 +40,21 @@ const MoveDocumentsComponent = ({
 
         if (conditionFn(userData)) {
           const { copied, verified, ...filteredUserData } = userData;
-
           const outputUserDocRef = doc(db, outputCollection, userId);
           const outputUserDoc = await getDoc(outputUserDocRef);
 
           if (!outputUserDoc.exists() || !userData.copied) {
             batch.set(outputUserDocRef, filteredUserData);
 
-            // Delete the original document instead of just updating
-            const userDocRef = doc(db, inputCollection, userId);
-            batch.delete(userDocRef);
+            if (deleteAfterCopy) {
+              const userDocRef = doc(db, inputCollection, userId);
+              batch.delete(userDocRef);
+            }
 
             batchCount++;
-
             if (batchCount >= 500) {
               await batch.commit();
-              batch = writeBatch(db); // Start a new batch
+              batch = writeBatch(db);
               batchCount = 0;
             }
           }
@@ -71,15 +74,17 @@ const MoveDocumentsComponent = ({
   useEffect(() => {
     if (!loading) {
       copyUsers();
+      console.log("Moved Documents");
     }
   }, []);
 
-  return <></>;
+  return null;
 };
 
 export default MoveDocumentsComponent;
 
-{/*
+{
+  /*
   // Default behavior (does NOT delete original document)
   <MoveDocumentsComponent
     conditionFn={(user) => user.gradYear <= 2025}
@@ -94,4 +99,5 @@ export default MoveDocumentsComponent;
     outputCollection="Alumni"
     deleteAfterCopy={true}
   />
-*/}
+*/
+}
