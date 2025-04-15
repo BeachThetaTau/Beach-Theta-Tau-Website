@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import "./Brothers.css";
 import GenerateParallax from "../components/PillarsParallax";
 import Modal from "../components/Modal";
@@ -130,7 +132,7 @@ function Brothers() {
     .sort((a, b) => eboard.indexOf(a.position!) - eboard.indexOf(b.position!));
   const chairs = allUsers
     .filter((user) => user.position && !eboard.includes(user.position))
-    .sort((a, b) => a.position!.localeCompare(b.position!)); // Sorted alphabetically
+    .sort((a, b) => a.position!.localeCompare(b.position!));
 
   return (
     <>
@@ -147,7 +149,8 @@ function Brothers() {
             <div className="modal-container">
               <button onClick={() => setIsModalOpen(false)}>&times;</button>
               <div className="modal-content">
-                <img
+                <LazyLoadImage
+                  effect="blur"
                   src={
                     selectedUser.verified
                       ? generatePfpUrl(selectedUser.name)
@@ -191,7 +194,8 @@ function Brothers() {
                         onClick={() => handleUserClick(user)}
                         style={{ cursor: "pointer" }}
                       >
-                        <img
+                        <LazyLoadImage
+                          effect="blur"
                           src={
                             user.verified
                               ? generatePfpUrl(user.name)
@@ -223,7 +227,8 @@ function Brothers() {
                       onClick={() => handleUserClick(user)}
                       style={{ cursor: "pointer" }}
                     >
-                      <img
+                      <LazyLoadImage
+                        effect="blur"
                         src={
                           user.verified
                             ? generatePfpUrl(user.name)
@@ -250,7 +255,8 @@ function Brothers() {
                       onClick={() => handleUserClick(user)}
                       style={{ cursor: "pointer" }}
                     >
-                      <img
+                      <LazyLoadImage
+                        effect="blur"
                         src={
                           user.verified
                             ? generatePfpUrl(user.name)
