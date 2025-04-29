@@ -11,6 +11,7 @@ import Login from "./pages/Login"; // Ensure this is a .tsx file
 import Signup from "./pages/Signup"; // Ensure this is a .tsx file
 import Profile from "./pages/Profile"; // Ensure this is a .tsx file
 import Brothers from "./pages/Brothers";
+import Retreat from "./pages/Retreat";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/professionalism" element={<Professionalism />} />
           <Route path="/service" element={<Service />} />
           <Route path="/apply" element={<Apply />} />
+          <Route path="/retreat" element={<Retreat/>} />
         </Route>
       </Routes>
     </BrowserRouter>
