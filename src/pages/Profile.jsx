@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import {
@@ -238,8 +238,9 @@ const Profile = () => {
           Logout
         </button>
       </div>
-
+      
       <div className="user-info">
+      <Link id = "retreat" to="/retreat">🎉 Retreat Game 🏝️</Link>
         {["name", "major", "class", "gradYear", "linkedIn", "resumeLink"].map(
           (field) => (
             <div className="info-field" key={field}>
