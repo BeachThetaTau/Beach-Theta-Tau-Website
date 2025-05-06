@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getFirestore,
   collection,
@@ -8,19 +8,32 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import "./BingoGame.css";
 
 const db = getFirestore();
 
 function BingoGame() {
-  const [bingoGrid, setBingoGrid] = useState<any[][]>([]);
+  const [user, setUser] = useState(null);
+  const [bingoGrid, setBingoGrid] = useState([]);
 
+  // Watch auth state
   useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribeAuth();
+  }, []);
+
+  // Only subscribe to Firestore when signed in
+  useEffect(() => {
+    if (!user) return;
+
     const bingoCol = collection(db, "Bingo");
     const bingoQuery = query(bingoCol, orderBy("id"));
 
-    // Subscribe to realtime updates
-    const unsubscribe = onSnapshot(
+    const unsubscribeSnapshot = onSnapshot(
       bingoQuery,
       (snapshot) => {
         const bingoDocs = snapshot.docs.map((docSnapshot) => {
@@ -32,7 +45,7 @@ function BingoGame() {
           };
         });
 
-        const grid: any[][] = [];
+        const grid = [];
         for (let i = 0; i < 5; i++) {
           grid.push(bingoDocs.slice(i * 5, i * 5 + 5));
         }
@@ -43,22 +56,20 @@ function BingoGame() {
       }
     );
 
-    return () => unsubscribe();
-  }, []);
+    return () => unsubscribeSnapshot();
+  }, [user]);
 
-  const handleSquareClick = async (rowIndex: number, colIndex: number) => {
+  const handleSquareClick = async (rowIndex, colIndex) => {
     const newGrid = [...bingoGrid];
     const item = newGrid[rowIndex][colIndex];
-
-    // Toggle the marked status
     const newMarkedStatus = !item.marked;
+
     newGrid[rowIndex][colIndex] = {
       ...item,
       marked: newMarkedStatus,
     };
     setBingoGrid(newGrid);
 
-    // Update Firestore
     try {
       const itemRef = doc(db, "Bingo", String(item.id));
       await updateDoc(itemRef, { marked: newMarkedStatus });
@@ -66,6 +77,15 @@ function BingoGame() {
       console.error("Failed to update marked status:", err);
     }
   };
+
+  // If not signed in, show a placeholder or prompt
+  if (!user) {
+    return (
+      <div className="bingo-grid">
+        <p>Please log in to view and play the Bingo game.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bingo-grid">
@@ -75,7 +95,7 @@ function BingoGame() {
             <div
               key={`${rowIndex}-${colIndex}`}
               className={
-                `bingo-card ${item?.text.length > 19 ? "small-text" : "normal-text"} ` +
+                `bingo-card ${item?.text?.length > 19 ? "small-text" : "normal-text"} ` +
                 `${item.marked ? "marked" : ""}`
               }
               onClick={() => handleSquareClick(rowIndex, colIndex)}
