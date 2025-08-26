@@ -32,7 +32,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           width: "auto",
           margin: "auto",
           padding: "2%",
-          border: "2px solid #000",
           borderRadius: "10px",
           boxShadow: "2px solid black",
         }}
