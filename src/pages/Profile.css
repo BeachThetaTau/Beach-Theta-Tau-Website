@@ -130,14 +130,8 @@
   align-items: center;
 }
 
-#retreat {
+#link {
   font-size: 2rem;
   text-decoration: none;
   color: #7f170e;
-}
-
-@media (min-width: 768px) {
-  #retreat {
-    display: none;
-  }
 }

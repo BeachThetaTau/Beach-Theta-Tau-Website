@@ -238,9 +238,11 @@ const Profile = () => {
           Logout
         </button>
       </div>
-      
+
       <div className="user-info">
-      <Link id = "retreat" to="/retreat">🎉 Retreat Game 🏝️</Link>
+        <Link id="link" to="/delibs">
+          🗣️ Delibs 🗣️
+        </Link>
         {["name", "major", "class", "gradYear", "linkedIn", "resumeLink"].map(
           (field) => (
             <div className="info-field" key={field}>
