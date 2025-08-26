@@ -22,7 +22,7 @@ const DelibsMaster = () => {
   const [user, setUser] = useState(null);
   const [selectedDelibDoc, setSelectedDelibDoc] = useState({
     id: null,
-    name: null,
+    userId: null, // Changed from 'name' to 'userId'
   });
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,7 +58,7 @@ const DelibsMaster = () => {
           const docSnap = snapshot.docs[0];
           setSelectedDelibDoc({
             id: docSnap.id,
-            name: docSnap.data().selectedDelib,
+            userId: docSnap.data().selectedDelib, // This now contains the user ID
           });
         }
       },
@@ -73,7 +73,8 @@ const DelibsMaster = () => {
 
   // Setup votes listener when modal opens
   useEffect(() => {
-    if (!isModalOpen || !selectedProfile?.name) {
+    if (!isModalOpen || !selectedProfile?.id) {
+      // Changed from selectedProfile?.name to selectedProfile?.id
       // Clean up existing listener when modal closes
       if (usersSnapshotRef.current) {
         usersSnapshotRef.current();
@@ -84,7 +85,8 @@ const DelibsMaster = () => {
     }
 
     // Prevent duplicate listeners for the same profile
-    if (currentSelectedProfileRef.current === selectedProfile.name) {
+    if (currentSelectedProfileRef.current === selectedProfile.id) {
+      // Changed from selectedProfile.name to selectedProfile.id
       return;
     }
 
@@ -94,7 +96,7 @@ const DelibsMaster = () => {
     }
 
     setLoadingVotes(true);
-    currentSelectedProfileRef.current = selectedProfile.name;
+    currentSelectedProfileRef.current = selectedProfile.id; // Changed from selectedProfile.name to selectedProfile.id
 
     // Set up real-time listener for votes
     const unsubscribe = onSnapshot(
@@ -103,7 +105,7 @@ const DelibsMaster = () => {
         const votes = { yes: 0, no: 0, abstain: 0, total: 0 };
 
         snapshot.forEach((doc) => {
-          const vote = doc.data().votes?.[selectedProfile.name]?.toLowerCase();
+          const vote = doc.data().votes?.[selectedProfile.id]?.toLowerCase(); // Changed from selectedProfile.name to selectedProfile.id
           if (vote && (vote === "yes" || vote === "no" || vote === "abstain")) {
             votes.total++;
             votes[vote]++;
@@ -137,7 +139,7 @@ const DelibsMaster = () => {
         unsubscribe();
       }
     };
-  }, [isModalOpen, selectedProfile?.name]);
+  }, [isModalOpen, selectedProfile?.id]); // Changed from selectedProfile?.name to selectedProfile?.id
 
   // Cleanup all listeners on unmount
   useEffect(() => {
@@ -169,12 +171,14 @@ const DelibsMaster = () => {
   };
 
   const updateSelectedDelib = useCallback(
-    async (nameToUpdate) => {
-      if (!selectedDelibDoc.id || selectedDelibDoc.name === nameToUpdate)
+    async (userIdToUpdate) => {
+      // Changed parameter name from nameToUpdate to userIdToUpdate
+      if (!selectedDelibDoc.id || selectedDelibDoc.userId === userIdToUpdate)
+        // Changed from selectedDelibDoc.name to selectedDelibDoc.userId
         return;
       try {
         await updateDoc(doc(db, "selectedDelib", selectedDelibDoc.id), {
-          selectedDelib: nameToUpdate,
+          selectedDelib: userIdToUpdate, // Now stores user ID instead of name
         });
         // Note: setSelectedDelibDoc will be updated by the onSnapshot listener
       } catch (err) {
@@ -187,7 +191,7 @@ const DelibsMaster = () => {
   const handleCardClick = (person) => {
     setSelectedProfile(person);
     setIsModalOpen(true);
-    updateSelectedDelib(person.name || "Unknown Name");
+    updateSelectedDelib(person.id || "unknown-id"); // Changed from person.name to person.id
   };
 
   const closeModal = () => {

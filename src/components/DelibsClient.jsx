@@ -15,7 +15,7 @@ const DelibsClient = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [delibsCache, setDelibsCache] = useState(null);
-  const [selectedDelibValue, setSelectedDelibValue] = useState(null);
+  const [selectedDelibUserId, setSelectedDelibUserId] = useState(null); // Changed from selectedDelibValue to selectedDelibUserId
   const [userDoc, setUserDoc] = useState(null);
   const [currentVote, setCurrentVote] = useState(null);
 
@@ -41,18 +41,19 @@ const DelibsClient = () => {
 
   const setupSelectedDelibListener = () =>
     onSnapshot(collection(db, "selectedDelib"), (querySnapshot) => {
-      const selectedDelib =
-        querySnapshot.docs[0]?.data()?.selectedDelib || null;
-      setSelectedDelibValue(selectedDelib);
+      const selectedDelibUserId = // Changed variable name
+        querySnapshot.docs[0]?.data()?.selectedDelib || null; // This now contains user ID
+      setSelectedDelibUserId(selectedDelibUserId); // Updated state setter
     });
 
   useEffect(() => {
-    if (selectedDelibValue && userDoc?.votes) {
-      setCurrentVote(userDoc.votes[selectedDelibValue] || null);
+    if (selectedDelibUserId && userDoc?.votes) {
+      // Updated condition
+      setCurrentVote(userDoc.votes[selectedDelibUserId] || null); // Now using user ID as key
     } else {
       setCurrentVote(null);
     }
-  }, [selectedDelibValue, userDoc]);
+  }, [selectedDelibUserId, userDoc]); // Updated dependency
 
   const fetchUserDocument = async (uid) => {
     const userDocSnapshot = await getDoc(doc(db, "users", uid));
@@ -69,15 +70,15 @@ const DelibsClient = () => {
 
   const handleVote = useCallback(
     async (voteType) => {
-      if (!user || !selectedDelibValue || !userDoc) return;
+      if (!user || !selectedDelibUserId || !userDoc) return; // Updated condition
 
       const newVote = currentVote === voteType ? null : voteType;
       const updatedVotes = { ...(userDoc.votes || {}) };
 
       if (newVote === null) {
-        delete updatedVotes[selectedDelibValue];
+        delete updatedVotes[selectedDelibUserId]; // Now using user ID as key
       } else {
-        updatedVotes[selectedDelibValue] = newVote;
+        updatedVotes[selectedDelibUserId] = newVote; // Now using user ID as key
       }
 
       setCurrentVote(newVote);
@@ -90,20 +91,21 @@ const DelibsClient = () => {
         setCurrentVote(currentVote); // revert on error
       }
     },
-    [user, selectedDelibValue, currentVote, userDoc, db]
+    [user, selectedDelibUserId, currentVote, userDoc, db] // Updated dependency
   );
 
   const matchingDelibDoc = useMemo(() => {
-    if (!delibsCache || !selectedDelibValue) return null;
-    return Object.values(delibsCache).find(
-      (doc) => doc.name === selectedDelibValue
-    );
-  }, [delibsCache, selectedDelibValue]);
+    if (!delibsCache || !selectedDelibUserId) return null;
+    // Now looking up by document ID instead of name
+    return delibsCache[selectedDelibUserId] || null;
+  }, [delibsCache, selectedDelibUserId]); // Updated dependencies
 
   if (loading) return <div>Loading...</div>;
 
   if (!matchingDelibDoc)
-    return <div>No matching document found for: {selectedDelibValue}</div>;
+    return (
+      <div>No matching document found for user ID: {selectedDelibUserId}</div>
+    ); // Updated error message
 
   return (
     <>
