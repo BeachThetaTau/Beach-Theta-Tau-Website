@@ -1,0 +1,299 @@
+/* Mobile-first approach: Base styles for mobile */
+
+/* Main container */
+.delibs-client {
+  padding: 16px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Main profile card */
+.delib-profile-card {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  background-color: #fafafa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Profile content wrapper */
+.delib-profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+/* Image container */
+.delib-image-container {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 3/4; /* Consistent aspect ratio */
+}
+
+/* Profile image */
+.delib-profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+/* Profile image placeholder */
+.delib-profile-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: clamp(48px, 12vw, 72px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Hidden utility class */
+.hidden {
+  display: none !important;
+}
+
+/* Profile name */
+.delib-profile-name {
+  margin: 0;
+  color: #2c3e50;
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Major badge */
+.delib-profile-major {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #800000 0%, #a52a2a 50%, #b22222 100%);
+  border-radius: 25px;
+  color: white;
+  font-size: clamp(14px, 3.5vw, 16px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Graduation date */
+.delib-profile-grad-date {
+  color: #666;
+  font-size: clamp(14px, 3.5vw, 16px);
+  font-weight: 500;
+}
+
+.delib-profile-grad-date strong {
+  color: #2c3e50;
+}
+
+/* Events section container */
+.delib-events-section {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Events title */
+.delib-events-title {
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Events list container */
+.delib-events-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* Individual event item */
+.delib-event-item {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+/* No events message */
+.delib-no-events {
+  width: 100%;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  font-size: clamp(13px, 3.2vw, 15px);
+  padding: 20px;
+}
+
+/* Debug button */
+.delib-debug-button {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: clamp(11px, 2.8vw, 13px);
+  color: #6c757d;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.delib-debug-button:active {
+  transform: translateY(1px);
+}
+
+/* Not found error message */
+.delib-not-found {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #f8d7da;
+  border-radius: 12px;
+  background-color: #f8d7da;
+  color: #721c24;
+  font-size: clamp(13px, 3.2vw, 15px);
+  font-weight: 500;
+}
+
+/* General button styling */
+button {
+  font-family: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:focus {
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+/* Loading and auth states */
+.delibs-client > div {
+  width: 100%;
+  max-width: 100%;
+}
+
+.delibs-client h2 {
+  font-size: clamp(18px, 4.5vw, 24px);
+  color: #2c3e50;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.delibs-client p {
+  font-size: clamp(14px, 3.5vw, 16px);
+  color: #666;
+  margin-bottom: 12px;
+}
+
+/* Tablet styles */
+@media (min-width: 481px) and (max-width: 768px) {
+  .delibs-client {
+    padding: 24px;
+  }
+
+  .delib-profile-card {
+    margin-top: 30px;
+    padding: 30px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .delib-image-container {
+    max-width: 320px;
+  }
+
+  .delib-profile-content {
+    gap: 20px;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 769px) {
+  .delibs-client {
+    padding: 32px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .delib-profile-card {
+    margin-top: 40px;
+    padding: 40px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .delib-image-container {
+    max-width: 350px;
+  }
+
+  .delib-profile-content {
+    gap: 24px;
+  }
+
+  .delib-events-list {
+    gap: 16px;
+  }
+
+  .delib-event-item {
+    padding: 16px 22px;
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1200px) {
+  .delibs-client {
+    max-width: 700px;
+  }
+
+  .delib-profile-card {
+    max-width: 600px;
+    padding: 50px;
+  }
+
+  .delib-image-container {
+    max-width: 400px;
+  }
+}
+
+.vote {
+  width: 25vw;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.vote-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.voting-container {
+  display: flex;
+  justify-content: space-evenly;
+}
