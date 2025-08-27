@@ -22,14 +22,15 @@ const DelibsMaster = () => {
   const [user, setUser] = useState(null);
   const [selectedDelibDoc, setSelectedDelibDoc] = useState({
     id: null,
-    userId: null, // Changed from 'name' to 'userId'
+    userId: null,
   });
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [voteData, setVoteData] = useState(null);
   const [loadingVotes, setLoadingVotes] = useState(false);
+  const [bidGiven, setBidGiven] = useState(false);
+  const [loadingBid, setLoadingBid] = useState(false);
 
-  // Refs to track snapshots and prevent duplicate listeners
   const usersSnapshotRef = useRef(null);
   const selectedDelibSnapshotRef = useRef(null);
   const currentSelectedProfileRef = useRef(null);
@@ -47,7 +48,6 @@ const DelibsMaster = () => {
     return () => unsubscribe();
   }, []);
 
-  // Setup selectedDelib listener
   useEffect(() => {
     if (!user) return;
 
@@ -58,7 +58,7 @@ const DelibsMaster = () => {
           const docSnap = snapshot.docs[0];
           setSelectedDelibDoc({
             id: docSnap.id,
-            userId: docSnap.data().selectedDelib, // This now contains the user ID
+            userId: docSnap.data().selectedDelib,
           });
         }
       },
@@ -71,11 +71,8 @@ const DelibsMaster = () => {
     return () => unsubscribe();
   }, [user]);
 
-  // Setup votes listener when modal opens
   useEffect(() => {
     if (!isModalOpen || !selectedProfile?.id) {
-      // Changed from selectedProfile?.name to selectedProfile?.id
-      // Clean up existing listener when modal closes
       if (usersSnapshotRef.current) {
         usersSnapshotRef.current();
         usersSnapshotRef.current = null;
@@ -84,28 +81,24 @@ const DelibsMaster = () => {
       return;
     }
 
-    // Prevent duplicate listeners for the same profile
     if (currentSelectedProfileRef.current === selectedProfile.id) {
-      // Changed from selectedProfile.name to selectedProfile.id
       return;
     }
 
-    // Clean up previous listener
     if (usersSnapshotRef.current) {
       usersSnapshotRef.current();
     }
 
     setLoadingVotes(true);
-    currentSelectedProfileRef.current = selectedProfile.id; // Changed from selectedProfile.name to selectedProfile.id
+    currentSelectedProfileRef.current = selectedProfile.id;
 
-    // Set up real-time listener for votes
     const unsubscribe = onSnapshot(
       collection(db, "users"),
       (snapshot) => {
         const votes = { yes: 0, no: 0, abstain: 0, total: 0 };
 
         snapshot.forEach((doc) => {
-          const vote = doc.data().votes?.[selectedProfile.id]?.toLowerCase(); // Changed from selectedProfile.name to selectedProfile.id
+          const vote = doc.data().votes?.[selectedProfile.id]?.toLowerCase();
           if (vote && (vote === "yes" || vote === "no" || vote === "abstain")) {
             votes.total++;
             votes[vote]++;
@@ -133,15 +126,13 @@ const DelibsMaster = () => {
 
     usersSnapshotRef.current = unsubscribe;
 
-    // Cleanup function
     return () => {
       if (unsubscribe) {
         unsubscribe();
       }
     };
-  }, [isModalOpen, selectedProfile?.id]); // Changed from selectedProfile?.name to selectedProfile?.id
+  }, [isModalOpen, selectedProfile?.id]);
 
-  // Cleanup all listeners on unmount
   useEffect(() => {
     return () => {
       if (usersSnapshotRef.current) {
@@ -172,15 +163,12 @@ const DelibsMaster = () => {
 
   const updateSelectedDelib = useCallback(
     async (userIdToUpdate) => {
-      // Changed parameter name from nameToUpdate to userIdToUpdate
       if (!selectedDelibDoc.id || selectedDelibDoc.userId === userIdToUpdate)
-        // Changed from selectedDelibDoc.name to selectedDelibDoc.userId
         return;
       try {
         await updateDoc(doc(db, "selectedDelib", selectedDelibDoc.id), {
-          selectedDelib: userIdToUpdate, // Now stores user ID instead of name
+          selectedDelib: userIdToUpdate,
         });
-        // Note: setSelectedDelibDoc will be updated by the onSnapshot listener
       } catch (err) {
         console.error("Failed to update selectedDelib:", err);
       }
@@ -191,14 +179,105 @@ const DelibsMaster = () => {
   const handleCardClick = (person) => {
     setSelectedProfile(person);
     setIsModalOpen(true);
-    updateSelectedDelib(person.id || "unknown-id"); // Changed from person.name to person.id
+    setBidGiven(person.bidReceived || false);
+    updateSelectedDelib(person.id || "unknown-id");
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedProfile(null);
+    setBidGiven(false);
     currentSelectedProfileRef.current = null;
-    // Vote data and listener cleanup handled by useEffect
+  };
+
+  const handleBidClick = async () => {
+    if (!selectedProfile?.id) return;
+
+    setLoadingBid(true);
+    const newBidStatus = !bidGiven;
+
+    try {
+      await updateDoc(doc(db, "delibs", selectedProfile.id), {
+        bidReceived: newBidStatus,
+      });
+
+      setBidGiven(newBidStatus);
+
+      setDelibsData((prevData) =>
+        prevData.map((person) =>
+          person.id === selectedProfile.id
+            ? { ...person, bidReceived: newBidStatus }
+            : person
+        )
+      );
+
+      setSelectedProfile((prev) => ({ ...prev, bidReceived: newBidStatus }));
+
+      console.log(
+        `Bid ${newBidStatus ? "given to" : "removed from"} ${selectedProfile?.name}`
+      );
+    } catch (error) {
+      console.error("Error updating bid status:", error);
+    } finally {
+      setLoadingBid(false);
+    }
+  };
+
+  const handleDownloadResults = async () => {
+    try {
+      const csvContent = generateCSV();
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `delibs_results_${new Date().toISOString().split("T")[0]}.csv`
+      );
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      console.log("Results downloaded successfully");
+    } catch (error) {
+      console.error("Error downloading results:", error);
+    }
+  };
+
+  const generateCSV = () => {
+    const headers = ["Name", "Email", "Bid Received"];
+
+    const sortedData = [...delibsData].sort((a, b) => {
+      if (a.bidReceived && !b.bidReceived) return -1;
+      if (!a.bidReceived && b.bidReceived) return 1;
+
+      const nameA = (a.name || "Unknown").toLowerCase();
+      const nameB = (b.name || "Unknown").toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+
+    const rows = sortedData.map((person) => [
+      person.name || "Unknown",
+      person.id || "No ID",
+      person.bidReceived ? "Yes" : "No",
+    ]);
+
+    const allRows = [headers, ...rows];
+
+    return allRows
+      .map((row) =>
+        row
+          .map((field) =>
+            typeof field === "string" &&
+            (field.includes(",") || field.includes('"') || field.includes("\n"))
+              ? `"${field.replace(/"/g, '""')}"`
+              : field
+          )
+          .join(",")
+      )
+      .join("\n");
   };
 
   if (loading)
@@ -218,6 +297,16 @@ const DelibsMaster = () => {
     <div className="delibs-master">
       <div className="header">
         <h1>Delibs Collection Profiles</h1>
+        <div className="header-controls">
+          <div className="count">Total Profiles: {delibsData.length}</div>
+          <button
+            className="download-results-btn"
+            onClick={handleDownloadResults}
+            disabled={delibsData.length === 0}
+          >
+            Download Results
+          </button>
+        </div>
       </div>
 
       <div className="cards-container">
@@ -262,7 +351,6 @@ const DelibsMaster = () => {
         </div>
       )}
 
-      {/* Profile Modal */}
       {isModalOpen && selectedProfile && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -292,6 +380,17 @@ const DelibsMaster = () => {
               </div>
               <div className="modal-info-section">
                 <h2 className="modal-name">{selectedProfile.name}</h2>
+
+                <div className="bid-section">
+                  <button
+                    className={`give-bid-btn ${bidGiven ? "bid-given" : ""} ${loadingBid ? "loading" : ""}`}
+                    onClick={handleBidClick}
+                    disabled={loadingBid}
+                  >
+                    {loadingBid ? "Updating..." : "Give Bid"}
+                  </button>
+                </div>
+
                 <div className="modal-details">
                   <div className="detail-row">
                     <span className="detail-label">Major:</span>
@@ -321,7 +420,6 @@ const DelibsMaster = () => {
                   </div>
                 </div>
 
-                {/* Vote Results Section */}
                 <div className="vote-section">
                   <h3>Live Vote Results</h3>
 
