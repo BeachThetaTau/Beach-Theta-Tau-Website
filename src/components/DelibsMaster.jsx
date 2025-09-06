@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
-  getFirestore,
   collection,
   getDocs,
   doc,
@@ -9,11 +8,9 @@ import {
   limit,
   onSnapshot,
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { db, auth } from "../firebase"; 
 import "./DelibsMaster.css";
-
-const db = getFirestore();
-const auth = getAuth();
 
 const DelibsMaster = () => {
   const [delibsData, setDelibsData] = useState([]);
@@ -353,7 +350,10 @@ const DelibsMaster = () => {
 
       {isModalOpen && selectedProfile && (
         <div className="delibs-modal-overlay" onClick={closeModal}>
-          <div className="delibs-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="delibs-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button className="delibs-modal-close" onClick={closeModal}>
               ×
             </button>
