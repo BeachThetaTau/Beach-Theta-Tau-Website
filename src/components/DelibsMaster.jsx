@@ -352,19 +352,19 @@ const DelibsMaster = () => {
       )}
 
       {isModalOpen && selectedProfile && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeModal}>
+        <div className="delibs-modal-overlay" onClick={closeModal}>
+          <div className="delibs-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="delibs-modal-close" onClick={closeModal}>
               ×
             </button>
-            <div className="modal-body">
-              <div className="modal-image-section">
-                <div className="modal-image-container">
+            <div className="delibs-modal-body">
+              <div className="delibs-modal-image-section">
+                <div className="delibs-modal-image-container">
                   {selectedProfile.image ? (
                     <img
                       src={`https://drive.google.com/thumbnail?id=${selectedProfile.image}&sz=w600`}
                       alt={`Profile of ${selectedProfile.name}`}
-                      className="modal-image"
+                      className="delibs-modal-image"
                       onError={(e) => {
                         e.target.style.display = "none";
                         e.target.nextElementSibling.style.display = "flex";
@@ -378,8 +378,8 @@ const DelibsMaster = () => {
                   </div>
                 </div>
               </div>
-              <div className="modal-info-section">
-                <h2 className="modal-name">{selectedProfile.name}</h2>
+              <div className="delibs-modal-info-section">
+                <h2 className="delibs-modal-name">{selectedProfile.name}</h2>
 
                 <div className="bid-section">
                   <button
@@ -391,7 +391,7 @@ const DelibsMaster = () => {
                   </button>
                 </div>
 
-                <div className="modal-details">
+                <div className="delibs-modal-details">
                   <div className="detail-row">
                     <span className="detail-label">Major:</span>
                     <span className="detail-value">

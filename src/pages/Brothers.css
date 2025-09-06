@@ -49,30 +49,30 @@
 }
 
 /* Modal Styling */
-.modal-content img {
+.brothers-modal-content img {
   width: 297px;
   height: 432px;
   object-fit: cover;
 }
-.modal-container {
+.brothers-modal-container {
   width: 300px;
 }
 
-.modal-container button {
+.brothers-modal-container button {
   font-size: 2rem;
 }
 
-.modal-details h2 {
+.brothers-modal-details h2 {
   font-weight: 700;
   margin: 0;
 }
 
-.modal-details p {
+.brothers-modal-details p {
   font-size: 1rem;
   margin: 0;
 }
 
-.modal-buttons {
+.brothers-modal-buttons {
   display: flex;
   justify-content: space-evenly;
   padding-top: 1rem;

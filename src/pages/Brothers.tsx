@@ -177,9 +177,9 @@ const Brothers: React.FC = () => {
 
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           {selectedUser && (
-            <div className="modal-container">
+            <div className="brothers-modal-container">
               <button onClick={() => setIsModalOpen(false)}>&times;</button>
-              <div className="modal-content">
+              <div className="brothers-modal-content">
                 <LazyLoadImage
                   effect="blur"
                   src={
@@ -189,14 +189,14 @@ const Brothers: React.FC = () => {
                   }
                   alt=""
                 />
-                <div className="modal-details">
+                <div className="brothers-modal-details">
                   <h2>{selectedUser.name}</h2>
                   {selectedUser.position && (
                     <p>Position: {selectedUser.position}</p>
                   )}
                   <p>Major: {selectedUser.major || "N/A"}</p>
                   <p>Graduation Year: {selectedUser.gradYear || "N/A"}</p>
-                  <div className="modal-buttons">
+                  <div className="brothers-modal-buttons">
                     {selectedUser.linkedIn && (
                       <LinkedInButton linkedinUrl={selectedUser.linkedIn} />
                     )}

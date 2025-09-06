@@ -222,7 +222,7 @@
      - Fullscreen overlay with image and details split
      ========================================================= */
 
-.modal-overlay {
+.delibs-modal-overlay {
   /* Dimmed backdrop covering the viewport */
   position: fixed;
   top: 0;
@@ -237,7 +237,7 @@
   padding: 20px;
 }
 
-.modal-content {
+.delibs-modal-content {
   /* Card-like modal shell */
   background: white;
   border-radius: 25px;
@@ -249,7 +249,7 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.modal-close {
+.delibs-modal-close {
   /* Top-right close (X) button */
   position: absolute;
   top: 16px;
@@ -268,11 +268,11 @@
   transition: background-color 0.2s;
 }
 
-.modal-close:hover {
+.delibs-modal-close:hover {
   background: rgba(0, 0, 0, 0.2);
 }
 
-.modal-body {
+.delibs-modal-body {
   /* Two-pane layout: image (left) and info (right) */
   display: flex;
   min-height: 500px;
@@ -281,7 +281,7 @@
   overflow: hidden;
 }
 
-.modal-image-section {
+.delibs-modal-image-section {
   /* Left pane */
   flex: 1;
   background: #f8f9fa;
@@ -292,7 +292,7 @@
   overflow: hidden;
 }
 
-.modal-image-container {
+.delibs-modal-image-container {
   /* Centers the image and constrains height */
   width: 100%;
   height: 100%;
@@ -303,14 +303,14 @@
   min-height: 500px;
 }
 
-.modal-image {
+.delibs-modal-image {
   /* Preserve aspect ratio within container */
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
 }
 
-.modal-no-image-placeholder {
+.delibs-modal-no-image-placeholder {
   /* Placeholder when modal image is unavailable */
   width: 100%;
   height: 100%;
@@ -323,11 +323,11 @@
   font-weight: 500;
 }
 
-.modal-no-image-placeholder.hidden {
+.delibs-modal-no-image-placeholder.hidden {
   display: none;
 }
 
-.modal-info-section {
+.delibs-modal-info-section {
   /* Right pane with details */
   flex: 1;
   padding: 32px;
@@ -340,7 +340,7 @@
   border-bottom-right-radius: 25px;
 }
 
-.modal-name {
+.delibs-modal-name {
   /* Profile full name/title inside modal */
   font-size: 32px;
   font-weight: 700;
@@ -349,7 +349,7 @@
   line-height: 1.2;
 }
 
-.modal-details {
+.delibs-modal-details {
   /* Vertical stack of labeled items (e.g., role, email) */
   display: flex;
   flex-direction: column;
@@ -761,25 +761,25 @@
     height: 220px;
   }
 
-  .modal-content {
+  .delibs-modal-content {
     margin: 10px;
     max-height: calc(100vh - 20px);
   }
 
-  .modal-body {
+  .delibs-modal-body {
     /* Switch modal panes to vertical on smaller screens */
     flex-direction: column;
   }
 
-  .modal-image-section {
+  .delibs-modal-image-section {
     min-height: 300px;
   }
 
-  .modal-info-section {
+  .delibs-modal-info-section {
     padding: 24px;
   }
 
-  .modal-name {
+  .delibs-modal-name {
     font-size: 24px;
   }
 
@@ -828,11 +828,11 @@
     padding: 15px;
   }
 
-  .modal-overlay {
+  .delibs-modal-overlay {
     padding: 10px;
   }
 
-  .modal-info-section {
+  .delibs-modal-info-section {
     padding: 16px;
   }
 }
