@@ -7,7 +7,7 @@ const RushTimeline = () => {
     <div id="timeline-container">
       <div className="inner-container">
         <ul className="timeline">
-          <li className="event" data-date="2/3 - 7:00 PM">
+          <li className="event" data-date="9/8 - 7:00 PM">
             <p className="event-name">INFO NIGHT</p>
             <p className="event-date">9/8 - 7:00 PM</p>
             <p className="event-location">TBD</p>
@@ -18,7 +18,7 @@ const RushTimeline = () => {
             </p>
           </li>
 
-          <li className="event" data-date="2/4 - 7:00 PM">
+          <li className="event" data-date="9/9 - 7:00 PM">
             <p className="event-name">ENGINEERING NIGHT</p>
             <p className="event-date">9/9 - 7:00 PM</p>
             <p className="event-location">TBD</p>
@@ -28,7 +28,7 @@ const RushTimeline = () => {
             </p>
           </li>
 
-          <li className="event" data-date="2/5 - 7:00 PM">
+          <li className="event" data-date="9/10 - 7:00 PM">
             <p className="event-name">PROFFESSIONAL NIGHT</p>
             <p className="event-date">9/10 - 7:00 PM</p>
             <p className="event-location">TBD</p>
@@ -41,7 +41,7 @@ const RushTimeline = () => {
             </p>
           </li>
 
-          <li className="event" data-date="2/6 - 7:00 PM">
+          <li className="event" data-date="9/11 - 7:00 PM">
             <p className="event-name">GAME NIGHT</p>
             <p className="event-date">9/11 - 7:00 PM</p>
             <p className="event-location">Horn Center</p>
@@ -53,7 +53,7 @@ const RushTimeline = () => {
             </p>
           </li>
 
-          <li className="event" data-date="2/7 - 7:00 PM">
+          <li className="event" data-date="9/12 - 7:00 PM">
             <p className="event-name">SOCIAL NIGHT</p>
             <p className="event-date">9/12 - 7:00 PM</p>
             <p className="event-location">TBD</p>
