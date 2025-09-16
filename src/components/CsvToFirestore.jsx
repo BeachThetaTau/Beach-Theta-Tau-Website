@@ -120,7 +120,7 @@ const CsvToFirestore = () => {
             const result = {};
 
             rows.forEach((row) => {
-              const email = row[CSV_COLUMNS.EMAIL]?.trim();
+              const email = row[CSV_COLUMNS.EMAIL]?.trim().toLowerCase();
               if (isBlank(email)) return; // skip rows without email
 
               const first = row[CSV_COLUMNS.FIRST_NAME] ?? "";
