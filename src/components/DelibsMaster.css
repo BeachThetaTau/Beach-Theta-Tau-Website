@@ -653,7 +653,7 @@
 }
 
 .give-bid-btn.bid-given {
-  background-color: #27ae60;
+  background-color: #228b22;
 }
 
 .give-bid-btn.bid-given:hover {
@@ -706,6 +706,18 @@
   font-weight: 500;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.name-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.name-container img {
+  width: 1rem;
+  height: 1rem;
 }
 
 /* =========================================================

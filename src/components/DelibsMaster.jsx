@@ -9,7 +9,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { db, auth } from "../firebase"; 
+import { db, auth } from "../firebase";
 import "./DelibsMaster.css";
 
 const DelibsMaster = () => {
@@ -337,7 +337,10 @@ const DelibsMaster = () => {
                   <span>No Image</span>
                 </div>
               </div>
-              <div className="profile-name">{person.name || "Unknown"}</div>
+              <div className="name-container">
+                <div className="profile-name">{person.name || "Unknown"}</div>
+                {person.bidReceived ? <img src="check.png" /> : null}
+              </div>
             </div>
           ))}
       </div>
@@ -387,7 +390,11 @@ const DelibsMaster = () => {
                     onClick={handleBidClick}
                     disabled={loadingBid}
                   >
-                    {loadingBid ? "Updating..." : "Give Bid"}
+                    {loadingBid
+                      ? "Updating..."
+                      : bidGiven
+                        ? "Bid Received"
+                        : "Give Bid"}
                   </button>
                 </div>
 
