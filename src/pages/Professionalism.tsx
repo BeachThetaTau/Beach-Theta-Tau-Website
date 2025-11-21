@@ -34,10 +34,9 @@ function Professionalism() {
         <div className="center-div">
           <div className="proff-card">
             <DisplayCarousel
-              firstImage="CarineGordilloIntern.jpg"
-              secondImage="AdamBhuiyanIntern.jpg"
-              thirdImage="MiaCastroIntern.jpg"
+              slides={["CarineGordilloIntern.jpg", "MiaCastroIntern.jpg"]}
             />
+
             <div>
               <p className="proff-card-txt">
                 In the competitive world of engineering internships, Xi Epsilon
