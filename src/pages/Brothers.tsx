@@ -249,6 +249,9 @@ const Brothers: React.FC = () => {
                               ? generatePfpUrl(user.name)
                               : "/Brothers/blank-pfp.webp"
                           }
+                          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                            e.currentTarget.src = "/Brothers/blank-pfp.webp";
+                          }}
                           alt={`${user.name}'s profile`}
                         />
                         <h1>{user.name}</h1>
