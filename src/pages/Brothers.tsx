@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import "./Brothers.css";
@@ -126,7 +126,8 @@ const Brothers: React.FC = () => {
     const fetchUsers = async () => {
       try {
         const db = getFirestore();
-        const snapshot = await getDocs(collection(db, "users"));
+        const q = query(collection(db, "users"), where("verified", "==", true));
+        const snapshot = await getDocs(q);
         setUsers(snapshot.docs.map((doc) => doc.data() as User));
       } catch (error) {
         console.error("Error fetching users:", error);
