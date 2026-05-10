@@ -240,9 +240,6 @@ const Profile = () => {
       </div>
 
       <div className="user-info">
-        <Link id="link" to="/delibs">
-          🗣️ Delibs 🗣️
-        </Link>
         {["name", "major", "class", "gradYear", "linkedIn", "resumeLink"].map(
           (field) => (
             <div className="info-field" key={field}>
