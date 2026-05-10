@@ -127,7 +127,7 @@ const Brothers: React.FC = () => {
       try {
         const db = getFirestore();
         const q = query(collection(db, "users"), where("verified", "==", true));
-        const snapshot = await getDocs(q);
+        const snapshot = await getDocs(q);  
         setUsers(snapshot.docs.map((doc) => doc.data() as User));
       } catch (error) {
         console.error("Error fetching users:", error);
