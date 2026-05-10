@@ -188,6 +188,9 @@ const Brothers: React.FC = () => {
                       ? generatePfpUrl(selectedUser.name)
                       : "/Brothers/blank-pfp.webp"
                   }
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                            e.currentTarget.src = "/Brothers/blank-pfp.webp";
+                          }}
                   alt=""
                 />
                 <div className="brothers-modal-details">
