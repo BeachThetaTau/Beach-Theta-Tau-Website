@@ -169,7 +169,7 @@ const Brothers: React.FC = () => {
   return (
     <>
       <GenerateParallax
-        fileName={showOfficers ? "Eboard.JPG" :"Brothers.jpg"}
+        fileName={showOfficers ? "Eboard2.JPG" :"Brothers.jpg"}
         title={showOfficers ? "Meet the Executive Board" : "Meet the Brothers of Theta Tau"}
       />
 
