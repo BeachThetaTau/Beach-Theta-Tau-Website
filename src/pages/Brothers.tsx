@@ -169,8 +169,8 @@ const Brothers: React.FC = () => {
   return (
     <>
       <GenerateParallax
-        fileName="Brothers.jpg"
-        title="Meet brothers of Theta Tau"
+        fileName={showOfficers ? "Eboard.jpg" :"Brothers.jpg"}
+        title={showOfficers ? "Meet the Executive Board" : "Meet the Brothers of Theta Tau"}
       />
 
       <div className="brothers">
