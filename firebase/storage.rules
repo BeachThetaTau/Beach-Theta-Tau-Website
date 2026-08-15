@@ -1,0 +1,25 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && (
+        (('role' in request.auth.token) && request.auth.token.role == 'admin') ||
+        (('roles' in request.auth.token) && request.auth.token.roles.hasAny(['admin']))
+      );
+    }
+
+    match /member-assets/{uid}/{allPaths=**} {
+      allow read: if true;
+      allow write: if signedIn() && (request.auth.uid == uid || isAdmin());
+    }
+
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

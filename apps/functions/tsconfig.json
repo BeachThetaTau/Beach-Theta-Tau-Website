@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "lib",
+    "rootDir": "src",
+    "declaration": true,
+    "sourceMap": true,
+    "noEmit": false
+  },
+  "include": ["src/**/*.ts"],
+  "references": [{ "path": "../../packages/contracts" }]
+}

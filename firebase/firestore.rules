@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn() && (
+        (('role' in request.auth.token) && request.auth.token.role == 'admin') ||
+        (('roles' in request.auth.token) && request.auth.token.roles.hasAny(['admin']))
+      );
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin() || resource.data.verified == true;
+      allow create: if isOwner(uid) &&
+        request.resource.data.verified == false &&
+        request.resource.data.copied == false;
+      allow update: if isAdmin() || (
+        isOwner(uid) &&
+        // Votes are intentionally excluded: they are written only by the
+        // castVote Cloud Function (verified members, active candidate).
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'name', 'major', 'class', 'gradYear', 'linkedIn', 'resumeLink',
+          'email', 'verified', 'copied'
+        ]) &&
+        request.resource.data.verified == false &&
+        request.resource.data.copied == false
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /delibs/{candidateId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /selectedDelib/{documentId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Global on/off switch for a live deliberations session. Any signed-in
+    // member can read it (to show the "Cast your vote" button); only admins
+    // can start or stop a session.
+    match /delibsSession/{documentId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /Bingo/{cellId} {
+      allow read: if signedIn();
+      allow update: if signedIn() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['marked']);
+      allow create, delete: if isAdmin();
+    }
+
+    match /Alumni/{uid} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+  }
+}

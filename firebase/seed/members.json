@@ -1,0 +1,12 @@
+[
+  {
+    "uid": "demo-member",
+    "name": "Demo Member",
+    "email": "member@example.com",
+    "class": "Alpha",
+    "major": "Mechanical Engineering",
+    "gradYear": "2027",
+    "verified": true,
+    "copied": false
+  }
+]
