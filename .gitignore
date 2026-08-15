@@ -114,6 +114,7 @@ emulator-data/
 *.tgz
 .tmp/
 tmp/
+.fuse_hidden*
 
 
 # ---------- OS ----------
@@ -124,3 +125,4 @@ tmp/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
