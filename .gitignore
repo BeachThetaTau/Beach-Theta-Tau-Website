@@ -1,6 +1,126 @@
-.DS_Store
+# =========================================================================
+# Beach Theta Tau — monorepo .gitignore
+# Stack: npm workspaces (apps/web, apps/functions, packages/contracts),
+#        React + Vite + TS + Tailwind v4, Firebase (Functions/Firestore/Storage).
+# =========================================================================
+
+
+# ---------- Dependencies ----------
 node_modules/
-**node_modules
+.pnp
+.pnp.js
+.npm/
+jspm_packages/
 
 
+# ---------- Build output ----------
+dist/
+build/
+out/
+.vite/
+# Cloud Functions compile to apps/functions/lib (not matched by dist/).
+apps/functions/lib/
+# TypeScript incremental build info
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+
+# ---------- Caches ----------
+.cache/
+.eslintcache
+.stylelintcache
+.parcel-cache/
+.turbo/
+
+
+# ---------- Environment / secrets ----------
+# Ignore all env files but keep checked-in example templates.
 .env
+.env.*
+!.env.example
+!.env.*.example
+*.local
+
+
+# ---------- Credentials / keys (NEVER commit) ----------
+# Firebase Admin / Google service-account keys used by scripts such as
+# apps/functions/scripts/grant-admin.mjs (GOOGLE_APPLICATION_CREDENTIALS).
+*serviceAccount*.json
+*service-account*.json
+*service_account*.json
+google-application-credentials*.json
+gcloud-service-key.json
+firebase-adminsdk*.json
+*.pem
+*.key
+*.p12
+secrets/
+
+
+# ---------- Logs ----------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+# ---------- Testing / coverage ----------
+coverage/
+.nyc_output/
+.vitest/
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
+
+
+# ---------- Firebase ----------
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+database-debug.log*
+pubsub-debug.log*
+functions-debug.log*
+.runtimeconfig.json
+# Emulator export/import data
+emulator-data/
+
+
+# ---------- Deployment ----------
+.vercel/
+.netlify/
+
+
+# ---------- Editors / IDE ----------
+.idea/
+*.swp
+*.swo
+*~
+.history/
+# VS Code: ignore local noise but keep shared workspace config
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+
+# ---------- Misc ----------
+*.tgz
+.tmp/
+tmp/
+
+
+# ---------- OS ----------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
