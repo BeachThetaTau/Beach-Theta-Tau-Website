@@ -1,64 +1,82 @@
-# Theta Tau Xi Epsilon Website
+# Beach Theta Tau Website
 
-## Introduction
+Monorepo for the Theta Tau Xi Epsilon Chapter website at California State University, Long Beach.
 
-Welcome to the README for creating the Theta Tau Xi Epsilon website using React.js! This guide will walk you through the steps of setting up the website and provide some important information for development.
+## Architecture
 
-## Project Overview
+- `apps/web`: Vite + React application organized by business module.
+- `apps/functions`: Firebase Cloud Functions for privileged operations.
+- `packages/contracts`: shared frontend/backend TypeScript contracts.
+- `firebase`: Firestore indexes, security rules, Storage rules, and emulator seed data.
+- `scripts`: explicit maintenance and migration commands. Scripts default to dry-run where data could be changed.
+- `tests/e2e`: Playwright browser tests.
+- `docs`: architecture, data model, authorization, validation notes, the legacy refactor map, and operational runbooks.
 
-This project is the repository for CSULB's Theta Tau Engineering Fraternity, Xi Epsilon chapter, built using React, Nodejs, and Firebase.
+The web application follows a vertical-feature structure. Business modules may use shared UI and infrastructure, while `shared/` does not import from business modules. Route composition, providers, guards, and layouts live under `src/app`.
 
-## Getting Started
+## Requirements
 
-To get started with the development of the Theta Tau Xi Epsilon website, follow these steps:
+- Node.js 20 or newer
+- npm 10 or newer
+- Firebase CLI for emulator and deployment commands
 
-1. Clone the repository: `git clone https://github.com/BeachThetaTau/Beach-Theta-Tau_Website.git`
-2. Navigate to the project directory: `cd Beach-Theta-Tau_Website`
-3. Install dependencies: `npm install`
-4. Start the development server: `npm run dev`
-5. Open your browser and visit `http://localhost:5173` to view the website.
+## Local development
 
-## Project Structure
-
-The project structure is organized as follows:
-
-```
-Beach-Theta-Tau_Website/
-│
-├── public/
-│   ├── index.html
-│   └── ...
-│
-├── src/
-│   ├── components/
-│   │   ├── Header.js
-│   │   ├── Footer.js
-│   │   └── ...
-│   │
-│   ├── pages/
-│   │   ├── Home.js
-│   │   ├── About.js
-│   │   └── ...
-│   │
-│   ├── App.js
-│   ├── index.js
-│   └── ...
-│
-├── package.json
-└── README.md
+```bash
+npm install
+cp apps/web/.env.example apps/web/.env.local
+npm run dev
 ```
 
-- **`public/`**: Contains the HTML template (`index.html`) and other static assets.
-- **`src/`**: Contains the source code for the website.
-  - **`components/`**: Reusable UI components like Header, Footer, etc.
-  - **`pages/`**: Individual pages of the website like Home, About, Contact, etc.
-  - **`App.js`**: Main component that renders different pages based on the URL.
-  - **`index.js`**: Entry point of the React application.
-- **`package.json`**: Configuration file for Node.js dependencies and scripts.
+Commit the root `package-lock.json` created by the first install. CI currently uses `npm install` so the repository remains bootstrappable before that lockfile is generated; after committing it, switch CI and deployment workflows to `npm ci`.
 
-## Key Contributors
+The web app runs at `http://localhost:5173` by default.
 
-- [Dalfodev](https://github.com/dalfodev): Full-stack developer contributing to both frontend and backend for the Theta Tau Xi Epsilon website.
-- [MarkCarsonDev](https://github.com/MarkCarsonDev): Backend developer who specializes in server-side functionalities.
+### Firebase emulators
 
-  Rah rah!
+Set `VITE_USE_FIREBASE_EMULATORS=true` in `apps/web/.env.local`, then run:
+
+```bash
+npm run emulators
+npm run seed:emulator
+```
+
+## Validation
+
+```bash
+npm run build
+npm test
+npm run lint
+npm run test:e2e
+```
+
+See [`docs/validation.md`](docs/validation.md) for the checks completed during this refactor and the dependency-backed checks to run after installation.
+
+## Environment variables
+
+All browser-exposed Firebase values use Vite's `VITE_` prefix. See `apps/web/.env.example`. Firebase web configuration is not a secret; access control belongs in Firestore/Storage rules and privileged Cloud Functions.
+
+`VITE_LEGACY_ADMIN_UIDS` exists only to preserve the previous deliberations administrator while custom claims are rolled out. Remove it after assigning the `admin` role through `setUserRole` and removing the matching compatibility clause from Firebase rules.
+
+## Data migrations
+
+Potentially destructive scripts are dry-run by default:
+
+```bash
+npm exec tsx scripts/migrate-legacy-users.ts -- --before-year=2026
+npm exec tsx scripts/migrate-legacy-users.ts -- --before-year=2026 --apply
+
+npm exec tsx scripts/migrate-deliberations.ts -- candidates.csv
+npm exec tsx scripts/migrate-deliberations.ts -- candidates.csv --apply
+```
+
+Production scripts use Application Default Credentials. Point them at an emulator with `FIRESTORE_EMULATOR_HOST=127.0.0.1:8080`.
+
+## Deployment
+
+```bash
+npm run build
+firebase deploy
+```
+
+Vercel can also deploy the web workspace using the root `vercel.json`.
