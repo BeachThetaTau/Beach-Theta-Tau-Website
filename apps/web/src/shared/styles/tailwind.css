@@ -1,0 +1,257 @@
+/*
+  Cascade layer order (lowest priority first). Declaring this up front keeps
+  Tailwind's own layers in a predictable order for migrated components.
+*/
+@layer theme, base, components, utilities;
+
+/* Brand webfont (Typekit). */
+@import url("https://use.typekit.net/obn7dcx.css");
+
+@import "tailwindcss";
+
+/*
+  Design tokens. Values exposed here become Tailwind utilities automatically,
+  e.g. --color-brand -> bg-brand/text-brand/border-brand,
+  --radius-md -> rounded-md, --shadow-card -> shadow-card.
+
+  The palette is a warm, maroon-anchored system: the fraternity red is the
+  spine, gold is a supporting accent, and every neutral is warmed slightly so
+  the greys read as stone rather than cold LCD grey.
+*/
+@theme {
+  /* Typography */
+  --font-sans:
+    "alibaba-sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+
+  /* Brand reds — the primary identity */
+  --color-brand: #7f170e;
+  --color-brand-dark: #5c0f08;
+  --color-maroon: #84322c;
+  --color-maroon-dark: #6a2722;
+
+  /* Gold — supporting accent. `gold` for fills/underlines on any background,
+     `gold-ink` is the darker, legible version for gold text on light. */
+  --color-gold: #eab308;
+  --color-gold-ink: #9a6a12;
+
+  /* Warm neutral ramp */
+  --color-ink: #241d1b; /* headings */
+  --color-text: #34302e; /* body copy */
+  --color-muted: #6a615d; /* secondary / supporting copy */
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8f4f2; /* faint warm off-white section */
+  --color-muted-surface: #ececec; /* standard tinted section background */
+  --color-panel: #e8dfda; /* cards / callout panels */
+  --color-line: #e5ddd8; /* hairline borders + dividers */
+  --color-footer: #1c1514; /* dark footer */
+  --color-footer-text: #cbc0ba;
+
+  /* Legacy token kept for compatibility */
+  --color-accent: #ef3063;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgb(36 29 27 / 6%), 0 10px 24px rgb(36 29 27 / 7%);
+  --shadow-elevated: 0 20px 48px rgb(28 21 20 / 20%);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.25s ease both;
+  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  /* Sponsor logo marquee (SponsorCarousel) */
+  --animate-marquee: slide 35s infinite linear;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Base resets and defaults. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    color: var(--color-text);
+    background: var(--color-surface);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  img {
+    max-width: 100%;
+  }
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+/*
+  Reusable presentation classes. Written as plain CSS (with design-token
+  variables) so pages share one type scale, spacing rhythm, and set of
+  surfaces instead of hand-tuned arbitrary values.
+*/
+@layer components {
+  /* --- Layout --- */
+  .container-page {
+    width: 100%;
+    max-width: 75rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  .container-narrow {
+    width: 100%;
+    max-width: 52rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  .section {
+    padding-block: clamp(3.5rem, 7vw, 6.5rem);
+  }
+
+  .section-tight {
+    padding-block: clamp(2.5rem, 4.5vw, 4rem);
+  }
+
+  .section-muted {
+    background: var(--color-muted-surface);
+  }
+
+  /* --- Type scale --- */
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-brand);
+  }
+
+  .eyebrow-invert {
+    color: var(--color-gold);
+  }
+
+  .display-title {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+
+  .subsection-title {
+    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    color: var(--color-brand);
+  }
+
+  .lead {
+    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+    line-height: 1.65;
+    color: var(--color-muted);
+  }
+
+  .prose-body {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--color-text);
+  }
+
+  .prose-body > p + p {
+    margin-top: 1rem;
+  }
+
+  /* --- Surfaces & dividers --- */
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  .panel {
+    background: var(--color-panel);
+    border-radius: var(--radius-lg);
+  }
+
+  .rule {
+    height: 1px;
+    border: 0;
+    background: var(--color-line);
+  }
+
+  .accent-bar {
+    height: 4px;
+    width: 3.5rem;
+    border-radius: 999px;
+    background: var(--color-gold);
+  }
+}

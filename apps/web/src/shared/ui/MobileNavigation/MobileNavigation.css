@@ -1,0 +1,219 @@
+/*
+  MobileNavigation — expanding-circle hamburger menu.
+
+  A fixed circle at the bottom-center of the viewport expands into a
+  full-screen maroon overlay while the hamburger morphs into an X. The
+  pseudo-element machinery (three lines + the scaling circle) can't be
+  expressed with Tailwind utilities, so it lives here — but every colour,
+  font and radius is driven by the project's design tokens (exposed on
+  :root by the @theme block in tailwind.css) so it stays on-brand.
+*/
+
+.bmenu {
+  /* tunables */
+  --_circle-size: 6.25rem;
+  --_circle-h: calc(var(--_circle-size) / 2);
+  --_thickness: 4px;
+  --_ham-w: 1.75rem;
+  --_ham-h: 1.25rem;
+  --_overlay: var(--color-brand);
+  --_line: #fff;
+
+  box-sizing: border-box;
+  inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  z-index: 1000;
+
+  color: var(--_line);
+  /* Only the toggle is interactive when closed; the overlay re-enables the
+     whole surface when open (see .bmenu_active). */
+  pointer-events: none;
+}
+
+.bmenu_active {
+  block-size: 100%;
+  pointer-events: auto;
+}
+
+/* --- Nav panel --- */
+.bmenu__nav {
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 0;
+  display: flex;
+  align-items: flex-end;
+  z-index: 2;
+
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.bmenu_active .bmenu__nav {
+  flex-grow: 1;
+  opacity: 1;
+  will-change: opacity;
+  transition-duration: 0.2s;
+  transition-delay: 0.3s;
+}
+
+.bmenu__list {
+  inline-size: 100%;
+  max-block-size: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  margin: 0;
+  /* leave clearance above the toggle bump */
+  padding: 0 0 6rem;
+  list-style: none;
+}
+
+.bmenu:not(.bmenu_active) .bmenu__list {
+  display: none;
+}
+
+.bmenu__group {
+  padding: 0.5rem 2rem;
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  font-weight: 700;
+}
+
+.bmenu__link {
+  display: inline-flex;
+  color: var(--_line);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.bmenu__link:hover,
+.bmenu__link:focus-visible,
+.bmenu__link.is-active {
+  color: var(--color-gold);
+}
+
+/* --- Toggle button + expanding circle --- */
+.bmenu__toggle {
+  box-sizing: border-box;
+  inline-size: var(--_circle-size);
+  block-size: var(--_circle-h);
+  flex: none;
+
+  position: relative;
+  isolation: isolate;
+
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.bmenu__toggle::before {
+  content: "";
+  box-sizing: border-box;
+  inline-size: 1em;
+  block-size: 1em;
+  font-size: var(--_circle-size);
+
+  background-color: var(--_overlay);
+  border: 1px solid var(--_overlay);
+  border-radius: 50%;
+
+  position: absolute;
+  inset-block-end: -0.5em;
+  inset-inline-start: calc(50% - 0.5em);
+  z-index: -1;
+}
+
+.bmenu_active .bmenu__toggle::before {
+  inline-size: 100vmax;
+  block-size: 100vmax;
+  transform: translate3d(-50vh, -50vh, 0) scale(5);
+}
+
+/* --- Hamburger lines --- */
+.bmenu__ham {
+  --_first: 0;
+  --_third: calc(100% - var(--_thickness));
+
+  display: inline-flex;
+  inline-size: var(--_ham-w);
+  block-size: var(--_ham-h);
+
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-end: 0.75rem;
+  transform: translateX(-50%);
+}
+
+.bmenu__ham::before,
+.bmenu__ham::after,
+.bmenu__ham-label {
+  content: "";
+  inline-size: 100%;
+  border-block-start: var(--_thickness) solid var(--_line);
+  border-radius: 5px;
+  position: absolute;
+}
+
+.bmenu__ham::before {
+  inset-block-start: var(--_first);
+}
+.bmenu__ham::after {
+  inset-block-start: var(--_third);
+}
+.bmenu__ham-label {
+  inset-block-start: calc(50% - (var(--_thickness) / 2));
+}
+
+.bmenu_active .bmenu__ham {
+  --_first: 50%;
+  --_third: 50%;
+}
+
+.bmenu_active .bmenu__ham::before {
+  transform: translate3d(0, -50%, 0) rotate(45deg);
+}
+
+.bmenu_active .bmenu__ham::after {
+  transform: translate3d(0, -50%, 0) rotate(135deg);
+}
+
+.bmenu_active .bmenu__ham-label {
+  transform: rotate(-45deg) translate3d(-0.285em, -0.3em, 0);
+  opacity: 0;
+}
+
+/* --- Motion --- */
+@media (prefers-reduced-motion: no-preference) {
+  .bmenu__toggle::before {
+    will-change: width, height;
+    transition:
+      transform 0.25s cubic-bezier(0.04, -0.1, 0.29, 0.98),
+      width 0.25s cubic-bezier(0.04, -0.1, 0.29, 0.98),
+      height 0.25s cubic-bezier(0.04, -0.1, 0.29, 0.98);
+  }
+
+  .bmenu_active .bmenu__toggle::before {
+    transition-duration: 1s;
+  }
+
+  .bmenu__ham::before,
+  .bmenu__ham::after {
+    transition: transform 0.15s ease;
+  }
+
+  .bmenu__ham-label {
+    transition:
+      transform 0.15s ease,
+      opacity 0.15s ease;
+  }
+}
