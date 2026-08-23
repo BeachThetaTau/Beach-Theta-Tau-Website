@@ -60,6 +60,11 @@ service cloud.firestore {
       allow create, delete: if isAdmin();
     }
 
+    match /graduates/{uid} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
     match /Alumni/{uid} {
       allow read: if signedIn();
       allow write: if isAdmin();

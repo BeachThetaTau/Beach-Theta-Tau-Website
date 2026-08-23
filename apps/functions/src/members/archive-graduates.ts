@@ -15,9 +15,12 @@ export const archiveGraduates = onSchedule("0 3 1 7 *", async () => {
     if (!Number.isFinite(graduationYear) || graduationYear >= currentYear) continue;
 
     const destination = adminDb.doc(`Alumni/${memberDocument.id}`);
+    const profile = { ...memberDocument.data() };
+    delete profile.votes;
+    delete profile.copied;
     batch.set(destination, {
-      ...memberDocument.data(),
-      archivedAt: FieldValue.serverTimestamp(),
+      ...profile,
+      graduatedAt: FieldValue.serverTimestamp(),
     });
     batch.delete(memberDocument.ref);
     operations += 2;

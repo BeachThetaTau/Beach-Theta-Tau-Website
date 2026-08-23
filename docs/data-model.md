@@ -6,7 +6,7 @@ Member profile and per-candidate vote map.
 
 - `name`, `email`, `major`, `class`, `gradYear`
 - `linkedIn`, `resumeLink`, `position`
-- `verified`, `copied`
+- `verified`, `copied`, `isAdmin`, `role`
 - `votes: Record<candidateId, "yes" | "no" | "abstain">`
 
 Profile edits set `verified` to `false` so an administrator can review changed public data.
@@ -34,4 +34,10 @@ The repository can also read an existing legacy document if `current` has not ye
 
 ## `Alumni/{uid}`
 
-Archived member profile produced by the scheduled function or migration script.
+Archived / graduated member profile moved from the `users` collection when graduated by an administrator or scheduled automation.
+
+- `name`, `email`, `major`, `class`, `gradYear`
+- `linkedIn`, `resumeLink`, `position`
+- `verified`, `graduatedAt`
+
+
