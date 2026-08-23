@@ -1,10 +1,11 @@
-import type { MemberProfile } from "@beach-theta-tau/contracts";
 import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
 import { toErrorMessage } from "@/shared/lib/errors";
 import { getVerifiedMembers } from "../api/members.repository";
+import { allMembersAtom } from "../atoms/members.atoms";
 
 export function useMembers() {
-  const [members, setMembers] = useState<MemberProfile[]>([]);
+  const [members, setMembers] = useAtom(allMembersAtom);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +24,8 @@ export function useMembers() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [setMembers]);
 
   return { members, loading, error };
 }
+

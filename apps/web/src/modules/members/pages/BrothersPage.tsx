@@ -1,21 +1,26 @@
-import type { MemberProfile } from "@beach-theta-tau/contracts";
-import { useMemo, useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import PageHero from "@/shared/ui/PageHero/PageHero";
 import { EmptyState } from "@/shared/ui/EmptyState/EmptyState";
 import { LoadingState } from "@/shared/ui/LoadingState/LoadingState";
+import {
+  chairMembersAtom,
+  executiveBoardMembersAtom,
+  selectedMemberModalAtom,
+  showingOfficersAtom,
+} from "../atoms/members.atoms";
 import { MemberDetailsModal } from "../components/MemberDetailsModal/MemberDetailsModal";
 import { MemberDirectoryFilters } from "../components/MemberDirectoryFilters/MemberDirectoryFilters";
 import { MemberGrid } from "../components/MemberGrid/MemberGrid";
 import { OfficerSection } from "../components/OfficerSection/OfficerSection";
 import { useMembers } from "../hooks/useMembers";
-import { splitOfficers } from "../utils/member-sorting";
 
 export function BrothersPage() {
   const { members, loading, error } = useMembers();
-  const [selectedMember, setSelectedMember] = useState<MemberProfile | null>(null);
-  const [showOfficers, setShowOfficers] = useState(false);
-  const { executiveBoard, chairs } = useMemo(() => splitOfficers(members), [members]);
+  const [selectedMember, setSelectedMember] = useAtom(selectedMemberModalAtom);
+  const [showOfficers, setShowOfficers] = useAtom(showingOfficersAtom);
+  const executiveBoard = useAtomValue(executiveBoardMembersAtom);
+  const chairs = useAtomValue(chairMembersAtom);
 
   return (
     <>
@@ -65,3 +70,4 @@ export function BrothersPage() {
 }
 
 export default BrothersPage;
+

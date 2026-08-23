@@ -1,5 +1,6 @@
 import type { DeliberationCandidate } from "@beach-theta-tau/contracts";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
 import { isoDate } from "@/shared/lib/dates";
 import { EmptyState } from "@/shared/ui/EmptyState/EmptyState";
 import { LoadingState } from "@/shared/ui/LoadingState/LoadingState";
@@ -9,13 +10,19 @@ import {
   setActiveCandidate,
   setCandidateBidStatus,
 } from "../../api/deliberations.repository";
+import {
+  adminSelectedCandidateAtom,
+  allCandidatesAtom,
+  sortedCandidatesAtom,
+} from "../../atoms/deliberations.atoms";
 import { CandidateCard } from "../CandidateCard/CandidateCard";
 import { CandidateDetails } from "../CandidateDetails/CandidateDetails";
 import { VoteResults } from "../VoteResults/VoteResults";
 
 export function AdminDashboard() {
-  const [candidates, setCandidates] = useState<DeliberationCandidate[]>([]);
-  const [selected, setSelected] = useState<DeliberationCandidate | null>(null);
+  const [candidates, setCandidates] = useAtom(allCandidatesAtom);
+  const [selected, setSelected] = useAtom(adminSelectedCandidateAtom);
+  const sortedCandidates = useAtomValue(sortedCandidatesAtom);
   const [loading, setLoading] = useState(true);
   const [loadingBid, setLoadingBid] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,12 +32,7 @@ export function AdminDashboard() {
       .then(setCandidates)
       .catch((nextError) => setError(nextError.message))
       .finally(() => setLoading(false));
-  }, []);
-
-  const sortedCandidates = useMemo(
-    () => [...candidates].sort((left, right) => left.name.localeCompare(right.name)),
-    [candidates],
-  );
+  }, [setCandidates]);
 
   const selectCandidate = async (candidate: DeliberationCandidate) => {
     setSelected(candidate);

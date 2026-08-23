@@ -1,14 +1,23 @@
-import type { DeliberationCandidate, VoteChoice } from "@beach-theta-tau/contracts";
-import { useEffect, useMemo, useState } from "react";
+import type { VoteChoice } from "@beach-theta-tau/contracts";
+import { useEffect, useState } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useAuth } from "@/modules/auth";
 import { castVote, listCandidates, subscribeMemberVotes } from "../api/deliberations.repository";
+import {
+  activeCandidateAtom,
+  allCandidatesAtom,
+  currentActiveVoteAtom,
+  memberVotesAtom,
+} from "../atoms/deliberations.atoms";
 import { useActiveCandidate } from "./useActiveCandidate";
 
 export function useBallot() {
   const { account } = useAuth();
   const active = useActiveCandidate();
-  const [candidates, setCandidates] = useState<DeliberationCandidate[]>([]);
-  const [votes, setVotes] = useState<Record<string, VoteChoice>>({});
+  const setCandidates = useSetAtom(allCandidatesAtom);
+  const setVotes = useSetAtom(memberVotesAtom);
+  const candidate = useAtomValue(activeCandidateAtom);
+  const currentVote = useAtomValue(currentActiveVoteAtom);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,18 +37,12 @@ export function useBallot() {
     return () => {
       activeRequest = false;
     };
-  }, []);
+  }, [setCandidates]);
 
   useEffect(() => {
     if (!account) return;
     return subscribeMemberVotes(account.uid, setVotes, (nextError) => setError(nextError.message));
-  }, [account]);
-
-  const candidate = useMemo(
-    () => candidates.find((item) => item.id === active.candidateId) ?? null,
-    [active.candidateId, candidates],
-  );
-  const currentVote = active.candidateId ? (votes[active.candidateId] ?? null) : null;
+  }, [account, setVotes]);
 
   const vote = async (choice: VoteChoice) => {
     if (!account || !active.candidateId) return;
@@ -79,3 +82,4 @@ export function useBallot() {
     activeCandidateId: active.candidateId,
   };
 }
+
