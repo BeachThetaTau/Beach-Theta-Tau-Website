@@ -1,9 +1,5 @@
 /**
- * One-time bootstrap: grant the "admin" custom claim to a user.
- *
- * This replaces the previously hard-coded admin UID in the Firestore/Storage
- * security rules. After the first admin exists, further roles can be managed
- * with the `setUserRole` callable from inside the app.
+ * Grant the "admin" custom claim and Firestore admin flag to a user.
  *
  * Usage (from apps/functions):
  *   # Point at your project's service account credentials:
@@ -24,7 +20,7 @@ const APP_ROLES = ["member", "admin"];
 
 const uid = process.argv[2];
 if (!uid) {
-  console.error("Usage: node scripts/grant-admin.mjs <uid>");
+  console.error("Usage: node apps/functions/scripts/grant-admin.mjs <uid>");
   process.exit(1);
 }
 

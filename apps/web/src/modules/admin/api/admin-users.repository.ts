@@ -1,4 +1,4 @@
-import type { AppRole, MemberProfile } from "@beach-theta-tau/contracts";
+import type { MemberProfile } from "@beach-theta-tau/contracts";
 import {
   collection,
   deleteDoc,
@@ -9,9 +9,7 @@ import {
   updateDoc,
   writeBatch,
 } from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
 import { db } from "@/shared/lib/firebase/firestore";
-import { functions } from "@/shared/lib/firebase/functions";
 
 /** Fields an admin may edit directly on a user document. */
 export type AdminEditableUser = Pick<
@@ -26,7 +24,6 @@ export type AdminEditableUser = Pick<
   | "position"
   | "verified"
   | "copied"
-  | "isAdmin"
 >;
 
 /**
@@ -70,29 +67,6 @@ export async function adminUpdateUser(
   await updateDoc(doc(db, "users", uid), { ...data });
 }
 
-/**
- * Assigns or revokes admin privileges for a user.
- * Updates both the Firebase Auth Custom Claims via the `setUserRole` Cloud Function
- * and the `users/{uid}` Firestore document.
- */
-export async function adminSetUserAdminRole(uid: string, isAdmin: boolean): Promise<void> {
-  const role: AppRole = isAdmin ? "admin" : "member";
-
-  await updateDoc(doc(db, "users", uid), {
-    isAdmin,
-    role,
-  });
-
-  try {
-    const callSetUserRole = httpsCallable<{ uid: string; role: AppRole }, { uid: string; roles: AppRole[] }>(
-      functions,
-      "setUserRole",
-    );
-    await callSetUserRole({ uid, role });
-  } catch (error) {
-    console.warn("Could not invoke setUserRole cloud function:", error);
-  }
-}
 
 /**
  * Sets or clears a user's chapter position.

@@ -9,7 +9,6 @@ import {
   adminDeleteUser,
   adminGraduateUser,
   adminRestoreAlumni,
-  adminSetUserAdminRole,
   adminUpdateUser,
   listAllAlumni,
   listAllUsers,
@@ -32,7 +31,6 @@ type EditForm = {
   position: string;
   verified: boolean;
   copied: boolean;
-  isAdmin: boolean;
 };
 
 type FieldDef = { key: keyof EditForm; label: string; placeholder?: string };
@@ -62,7 +60,6 @@ function toForm(member: MemberProfile): EditForm {
     position: member.position ?? "",
     verified: member.verified ?? false,
     copied: member.copied ?? false,
-    isAdmin: Boolean(member.isAdmin || member.role === "admin"),
   };
 }
 
@@ -78,7 +75,6 @@ function toPayload(form: EditForm): AdminEditableUser {
     position: form.position.trim(),
     verified: form.verified,
     copied: form.copied,
-    isAdmin: form.isAdmin,
   };
 }
 
@@ -99,7 +95,7 @@ function isExecutiveBoard(position?: string): boolean {
   return (EXECUTIVE_BOARD_POSITIONS as readonly string[]).includes(position);
 }
 
-export function AdminMembersPanel() {
+export function AdminMembersPanel({ refreshKey }: { refreshKey?: number } = {}) {
   const [users, setUsers] = useState<MemberProfile[]>([]);
   const [alumni, setAlumni] = useState<MemberProfile[]>([]);
   const [activeTab, setActiveTab] = useState<"active" | "alumni">("active");
@@ -135,7 +131,7 @@ export function AdminMembersPanel() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [refreshKey]);
 
   const stats = useMemo(() => {
     const verified = users.filter((user) => Boolean(user.verified)).length;
@@ -201,13 +197,8 @@ export function AdminMembersPanel() {
     setModalError(null);
     try {
       const payload = toPayload(form);
-      const prevIsAdmin = Boolean(selected.isAdmin || selected.role === "admin");
 
       await adminUpdateUser(selected.uid, payload);
-
-      if (form.isAdmin !== prevIsAdmin) {
-        await adminSetUserAdminRole(selected.uid, form.isAdmin);
-      }
 
       setUsers((prev) =>
         prev.map((user) =>
@@ -215,8 +206,6 @@ export function AdminMembersPanel() {
             ? {
                 ...user,
                 ...payload,
-                isAdmin: form.isAdmin,
-                role: form.isAdmin ? "admin" : "member",
               }
             : user,
         ),
@@ -226,49 +215,6 @@ export function AdminMembersPanel() {
       setModalError("Could not save changes. Please try again.");
     } finally {
       setSaving(false);
-    }
-  }
-
-  async function handleToggleAdmin(member: MemberProfile) {
-    if (!member.uid) return;
-    const currentIsAdmin = Boolean(member.isAdmin || member.role === "admin");
-    const displayName = member.name || member.email || "this user";
-    const promptMsg = currentIsAdmin
-      ? `Revoke administrator privileges from ${displayName}?`
-      : `Grant administrator privileges to ${displayName}?\n\nAdministrators have full access to deliberations, member moderation, and system settings.`;
-    if (!window.confirm(promptMsg)) return;
-
-    setActionInProgressId(member.uid);
-    try {
-      await adminSetUserAdminRole(member.uid, !currentIsAdmin);
-      const newIsAdmin = !currentIsAdmin;
-      setUsers((prev) =>
-        prev.map((user) =>
-          user.uid === member.uid
-            ? {
-                ...user,
-                isAdmin: newIsAdmin,
-                role: newIsAdmin ? "admin" : "member",
-              }
-            : user,
-        ),
-      );
-      if (selected?.uid === member.uid) {
-        setSelected((prev) =>
-          prev
-            ? {
-                ...prev,
-                isAdmin: newIsAdmin,
-                role: newIsAdmin ? "admin" : "member",
-              }
-            : prev,
-        );
-        setForm((prev) => (prev ? { ...prev, isAdmin: newIsAdmin } : prev));
-      }
-    } catch {
-      alert(`Could not update administrator status for ${displayName}. Please try again.`);
-    } finally {
-      setActionInProgressId(null);
     }
   }
 
@@ -430,7 +376,7 @@ export function AdminMembersPanel() {
             <div>
               <h2 className="subsection-title">Member management</h2>
               <p className="mt-1 text-sm text-muted">
-                Manage roles, admin privileges, positions, alumni/graduation status, and user records.
+                Manage member positions, verification, alumni/graduation status, and user records.
               </p>
             </div>
 
@@ -499,7 +445,6 @@ export function AdminMembersPanel() {
                         <th className="px-4 py-3 font-semibold">Member</th>
                         <th className="px-4 py-3 font-semibold">Class</th>
                         <th className="px-4 py-3 font-semibold">Position</th>
-                        <th className="px-4 py-3 font-semibold">Role</th>
                         <th className="px-4 py-3 font-semibold">Verified</th>
                         <th className="px-4 py-3 font-semibold">Copied</th>
                         <th className="px-4 py-3 text-right font-semibold">Actions</th>
@@ -546,22 +491,6 @@ export function AdminMembersPanel() {
                             <td className="px-4 py-3 text-muted">{user.class || "—"}</td>
                             <td className="px-4 py-3">
                               <PositionBadge position={user.position} />
-                            </td>
-                            <td className="px-4 py-3">
-                              <button
-                                type="button"
-                                onClick={() => handleToggleAdmin(user)}
-                                disabled={isOperating}
-                                className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-all ${
-                                  isUserAdmin
-                                    ? "bg-purple-100 text-purple-800 hover:bg-purple-200"
-                                    : "bg-surface-soft text-muted hover:bg-muted-surface hover:text-ink"
-                                } disabled:opacity-50`}
-                                title={isUserAdmin ? "Click to revoke admin role" : "Click to grant admin role"}
-                              >
-                                <IconShield className="h-3 w-3" />
-                                {isUserAdmin ? "Admin" : "Member"}
-                              </button>
                             </td>
                             <td className="px-4 py-3">
                               <StatusPill
@@ -723,7 +652,7 @@ export function AdminMembersPanel() {
                   <h3 className="truncate text-xl font-bold text-ink">
                     {selected.name || "Edit member"}
                   </h3>
-                  {form.isAdmin && (
+                  {Boolean(selected.isAdmin || selected.role === "admin") && (
                     <span className="inline-flex items-center gap-0.5 rounded bg-purple-100 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-purple-800">
                       <IconShield className="h-3 w-3" />
                       Admin
@@ -752,17 +681,6 @@ export function AdminMembersPanel() {
                 value={form.position}
                 onChange={(newPosition) => setField("position", newPosition)}
               />
-            </FieldGroup>
-
-            <FieldGroup title="Permissions & Roles">
-              <div className="flex flex-wrap gap-3">
-                <ToggleField
-                  label="Administrator"
-                  description="Grants full admin rights, member management & deliberations controls"
-                  checked={form.isAdmin}
-                  onChange={(value) => setField("isAdmin", value)}
-                />
-              </div>
             </FieldGroup>
 
             <FieldGroup title="Links">

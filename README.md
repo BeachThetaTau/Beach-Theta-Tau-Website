@@ -56,7 +56,7 @@ See [`docs/validation.md`](docs/validation.md) for the checks completed during t
 
 All browser-exposed Firebase values use Vite's `VITE_` prefix. See `apps/web/.env.example`. Firebase web configuration is not a secret; access control belongs in Firestore/Storage rules and privileged Cloud Functions.
 
-`VITE_LEGACY_ADMIN_UIDS` exists only to preserve the previous deliberations administrator while custom claims are rolled out. Remove it after assigning the `admin` role through `setUserRole` and removing the matching compatibility clause from Firebase rules.
+`VITE_LEGACY_ADMIN_UIDS` exists only to preserve the previous deliberations administrator while custom claims are rolled out. Remove it after assigning the `admin` role through `scripts/grant-admin.mjs` and removing the matching compatibility clause from Firebase rules.
 
 ## Data migrations
 

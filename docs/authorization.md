@@ -5,7 +5,7 @@
 - `member`: assigned to every authenticated account in the web application.
 - `admin`: Firebase custom claim required for approvals and deliberation administration.
 
-`setUserRole` is itself admin-only. Bootstrap the first administrator using the Firebase Admin SDK or a one-time trusted script.
+Administrators are managed via the Firebase Admin SDK using trusted CLI scripts (`grant-admin.mjs` and `revoke-admin.mjs`). Admin privileges cannot be granted or revoked directly from the web client.
 
 ## Firestore policy
 

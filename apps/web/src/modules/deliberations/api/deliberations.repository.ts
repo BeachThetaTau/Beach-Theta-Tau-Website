@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
+  writeBatch,
   type Unsubscribe,
 } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
@@ -171,3 +172,77 @@ export function candidatesToCsv(candidates: DeliberationCandidate[]): string {
     .map((row) => row.map((value) => csvField(String(value))).join(","))
     .join("\n");
 }
+
+/**
+ * Deletes all deliberation candidates from the `delibs` collection,
+ * wipes all cast votes across all user profiles, and resets `selectedDelib` and `delibsSession`.
+ */
+export async function clearAllDeliberationsData(): Promise<{
+  deletedCandidatesCount: number;
+  clearedUsersCount: number;
+}> {
+  const [candidatesSnapshot, usersSnapshot, selectedSnapshot] = await Promise.all([
+    getDocs(collection(db, "delibs")),
+    getDocs(collection(db, "users")),
+    getDocs(collection(db, "selectedDelib")),
+  ]);
+
+  let batch = writeBatch(db);
+  let operations = 0;
+
+  const commitIfNeeded = async () => {
+    if (operations >= 400) {
+      await batch.commit();
+      batch = writeBatch(db);
+      operations = 0;
+    }
+  };
+
+  // Delete all candidate documents in delibs
+  for (const candidateDoc of candidatesSnapshot.docs) {
+    batch.delete(candidateDoc.ref);
+    operations += 1;
+    await commitIfNeeded();
+  }
+
+  // Wipe votes on all users who have votes recorded
+  let clearedUsersCount = 0;
+  for (const userDoc of usersSnapshot.docs) {
+    const userData = userDoc.data();
+    if (
+      userData.votes &&
+      typeof userData.votes === "object" &&
+      Object.keys(userData.votes as object).length > 0
+    ) {
+      batch.update(userDoc.ref, { votes: {} });
+      clearedUsersCount += 1;
+      operations += 1;
+      await commitIfNeeded();
+    }
+  }
+
+  // Delete all selectedDelib documents
+  for (const selDoc of selectedSnapshot.docs) {
+    batch.delete(selDoc.ref);
+    operations += 1;
+    await commitIfNeeded();
+  }
+
+  // Set delibs session to inactive
+  batch.set(
+    doc(db, "delibsSession", "current"),
+    { active: false, updatedAt: serverTimestamp() },
+    { merge: true },
+  );
+  operations += 1;
+
+  if (operations > 0) {
+    await batch.commit();
+  }
+
+  return {
+    deletedCandidatesCount: candidatesSnapshot.docs.length,
+    clearedUsersCount,
+  };
+}
+

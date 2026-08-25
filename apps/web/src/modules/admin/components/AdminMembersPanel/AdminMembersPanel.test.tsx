@@ -52,7 +52,6 @@ describe("AdminMembersPanel", () => {
     vi.mocked(adminRepo.listAllUsers).mockResolvedValue([...mockUsers]);
     vi.mocked(adminRepo.listAllAlumni).mockResolvedValue([...mockAlumni]);
     vi.mocked(adminRepo.adminUpdateUser).mockResolvedValue();
-    vi.mocked(adminRepo.adminSetUserAdminRole).mockResolvedValue();
     vi.mocked(adminRepo.adminGraduateUser).mockResolvedValue();
     vi.mocked(adminRepo.adminDeleteUser).mockResolvedValue();
     vi.mocked(adminRepo.adminRestoreAlumni).mockResolvedValue();
@@ -91,7 +90,7 @@ describe("AdminMembersPanel", () => {
     expect(screen.getByText("Jordan Lee")).toBeInTheDocument();
   });
 
-  it("opens edit modal and saves position update", async () => {
+  it("opens edit modal and saves position update without admin toggle option", async () => {
     const user = userEvent.setup();
     render(<AdminMembersPanel />);
 
@@ -104,6 +103,8 @@ describe("AdminMembersPanel", () => {
 
     expect(screen.getByRole("dialog", { name: "Edit member" })).toBeInTheDocument();
     expect(screen.getByText("Chapter Position")).toBeInTheDocument();
+    expect(screen.queryByText("Permissions & Roles")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/administrator/i)).not.toBeInTheDocument();
 
     // Select position from dropdown
     const select = screen.getByLabelText("Select Standard Position");
@@ -191,22 +192,38 @@ describe("AdminMembersPanel", () => {
     });
   });
 
-  it("allows granting and revoking admin role", async () => {
-    const user = userEvent.setup();
-    vi.spyOn(window, "confirm").mockReturnValue(true);
+  it("displays admin badge for admin users and does not render role toggle buttons", async () => {
+    const usersWithAdmin: MemberProfile[] = [
+      {
+        uid: "admin-user",
+        name: "Admin Person",
+        email: "admin@example.com",
+        class: "Alpha",
+        isAdmin: true,
+        role: "admin",
+        verified: true,
+      },
+      {
+        uid: "regular-user",
+        name: "Regular Person",
+        email: "regular@example.com",
+        class: "Beta",
+        verified: true,
+      },
+    ];
+    vi.mocked(adminRepo.listAllUsers).mockResolvedValue(usersWithAdmin);
 
     render(<AdminMembersPanel />);
 
     await waitFor(() => {
-      expect(screen.getByText("Jordan Lee")).toBeInTheDocument();
+      expect(screen.getByText("Admin Person")).toBeInTheDocument();
     });
 
-    const memberRoleButtons = screen.getAllByRole("button", { name: /^member$/i });
-    await user.click(memberRoleButtons[0]!);
+    // Admin badge exists next to the name
+    expect(screen.getByTitle("Administrator")).toBeInTheDocument();
 
-    expect(window.confirm).toHaveBeenCalled();
-    await waitFor(() => {
-      expect(adminRepo.adminSetUserAdminRole).toHaveBeenCalledWith("user-1", true);
-    });
+    // No role toggle buttons in the table
+    expect(screen.queryByRole("button", { name: /^member$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^admin$/i })).not.toBeInTheDocument();
   });
 });
