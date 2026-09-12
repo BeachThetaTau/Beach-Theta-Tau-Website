@@ -110,6 +110,9 @@ emulator-data/
 !.vscode/tasks.json
 
 
+# ---------- Data & Imports ----------
+*.csv
+
 # ---------- Misc ----------
 *.tgz
 .tmp/

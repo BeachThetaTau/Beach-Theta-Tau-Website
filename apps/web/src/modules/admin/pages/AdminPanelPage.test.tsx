@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { AdminPanelPage } from "./AdminPanelPage";
 import * as delibsModule from "@/modules/deliberations";
-import * as adminRepo from "../api/admin-users.repository";
 
 vi.mock("@/modules/deliberations", async () => {
   const actual = await vi.importActual<typeof import("@/modules/deliberations")>(

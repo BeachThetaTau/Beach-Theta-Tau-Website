@@ -1,107 +1,135 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { adminDb } from "./_firebase-admin.js";
+import { readCsvFile, createColumnFinder } from "./lib/csv.js";
+import { writeBatchToFirestore } from "./lib/firestore-writer.js";
+import {
+  extractDriveId,
+  normalizeEmail,
+  cleanString,
+  cleanEventName,
+  omitEmptyValues,
+} from "./lib/transformers.js";
 
-const csvPath = process.argv.find((argument) => argument.endsWith(".csv"));
+const csvPath =
+  process.argv.find((arg) => arg.startsWith("--csv="))?.slice(6) ||
+  process.argv.find((arg) => arg.endsWith(".csv"));
+
 const apply = process.argv.includes("--apply");
-if (!csvPath)
-  throw new Error(
-    "Usage: npm exec tsx scripts/migrate-deliberations.ts -- candidates.csv [--apply]",
+
+if (!csvPath) {
+  console.error(`
+Usage:
+  npm exec tsx scripts/migrate-deliberations.ts -- candidates.csv [--apply]
+  npm exec tsx scripts/migrate-deliberations.ts -- --csv=candidates.csv [--apply]
+
+Options:
+  --apply   Persist changes to Firestore (defaults to dry-run preview)
+`);
+  process.exit(1);
+}
+
+interface DeliberationCandidateRecord {
+  name?: string;
+  major?: string;
+  gradYear?: string;
+  image?: string;
+  events: string[];
+}
+
+async function run() {
+  const { headers, records } = await readCsvFile(csvPath!);
+
+  if (records.length === 0) {
+    console.log("No data found in the provided CSV file.");
+    return;
+  }
+
+  const finder = createColumnFinder(headers);
+  const getEmail = finder.matcher(["email", "e-mail", "mail"]);
+  const getName = finder.matcher(["name", "candidate", "full name"]);
+  const getMajor = finder.matcher(["major"]);
+  const getGradYear = finder.matcher(["grad", "year", "graduation", "class"]);
+  const getImage = finder.matcher(["photo", "image", "picture", "headshot", "drive", "file"]);
+  const getEvent = finder.matcher(["event", "session", "night", "check-in", "checkin"]);
+
+  const candidates = new Map<string, DeliberationCandidateRecord>();
+  let skippedRows = 0;
+
+  for (const record of records) {
+    const rawEmail = getEmail(record);
+    const email = normalizeEmail(rawEmail);
+
+    if (!email) {
+      skippedRows += 1;
+      continue;
+    }
+
+    const rawName = cleanString(getName(record));
+    const rawMajor = cleanString(getMajor(record));
+    const rawGradYear = cleanString(getGradYear(record));
+    const rawImage = extractDriveId(getImage(record));
+    const event = cleanEventName(getEvent(record));
+
+    const candidate = candidates.get(email) ?? {
+      events: [],
+    };
+
+    // Only update fields if the incoming CSV row has a non-empty value, preserving existing values
+    if (rawName && (!candidate.name || candidate.name.length < rawName.length)) {
+      candidate.name = rawName;
+    }
+    if (rawMajor) {
+      candidate.major = rawMajor;
+    }
+    if (rawGradYear) {
+      candidate.gradYear = rawGradYear;
+    }
+    if (rawImage) {
+      candidate.image = rawImage;
+    }
+
+    if (event && !candidate.events.includes(event)) {
+      candidate.events.push(event);
+    }
+
+    candidates.set(email, candidate);
+  }
+
+  console.log(`\n📋 Processed ${records.length} CSV rows (${skippedRows} skipped without valid email).`);
+  console.log(`Found ${candidates.size} unique candidate(s).\n`);
+
+  const sortedCandidates = Array.from(candidates.entries()).sort((a, b) =>
+    (a[1].name ?? "").localeCompare(b[1].name ?? ""),
   );
 
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = "";
-  let quoted = false;
+  sortedCandidates.forEach(([email, c], index) => {
+    const eventsStr = c.events.length > 0 ? `Events: [${c.events.join(", ")}]` : "No events";
+    const photoStr = c.image ? `Photo: ${c.image}` : "No photo";
+    console.log(
+      `  ${String(index + 1).padStart(3, " ")}. ${c.name || "Unknown"} <${email}> | Major: ${c.major || "N/A"} | Grad: ${c.gradYear || "N/A"} | ${photoStr} | ${eventsStr}`,
+    );
+  });
 
-  for (let index = 0; index < text.length; index += 1) {
-    const character = text[index]!;
-    const next = text[index + 1];
-    if (character === '"' && quoted && next === '"') {
-      field += '"';
-      index += 1;
-    } else if (character === '"') {
-      quoted = !quoted;
-    } else if (character === "," && !quoted) {
-      row.push(field);
-      field = "";
-    } else if ((character === "\n" || character === "\r") && !quoted) {
-      if (character === "\r" && next === "\n") index += 1;
-      row.push(field);
-      if (row.some((value) => value.trim())) rows.push(row);
-      row = [];
-      field = "";
-    } else {
-      field += character;
-    }
-  }
-  row.push(field);
-  if (row.some((value) => value.trim())) rows.push(row);
-  return rows;
+  // Strip empty/null properties so merging does NOT overwrite existing valued fields in Firestore
+  const batchItems = sortedCandidates.map(([email, candidate]) => ({
+    id: email,
+    data: omitEmptyValues({
+      name: candidate.name,
+      major: candidate.major,
+      gradYear: candidate.gradYear,
+      image: candidate.image,
+      events: candidate.events.length > 0 ? candidate.events : undefined,
+    }),
+  }));
+
+  await writeBatchToFirestore({
+    collection: "delibs",
+    items: batchItems,
+    apply,
+    merge: true,
+    omitEmptyFields: true,
+  });
 }
 
-function driveId(value: string) {
-  const direct = value.match(/\/d\/([^/]+)/)?.[1];
-  if (direct) return direct;
-  try {
-    return new URL(value).searchParams.get("id") ?? value.trim();
-  } catch {
-    return value.trim();
-  }
-}
-
-const columns = {
-  email: 2,
-  firstName: 3,
-  lastName: 4,
-  event: 5,
-  major: 9,
-  gradYear: 11,
-  image: 13,
-};
-const source = await readFile(path.resolve(csvPath), "utf8");
-const rows = parseCsv(source).slice(1);
-const candidates = new Map<
-  string,
-  { name: string; events: string[]; major: string; gradYear: string; image: string }
->();
-
-for (const row of rows) {
-  const email = row[columns.email]?.trim().toLowerCase();
-  if (!email) continue;
-  const candidate = candidates.get(email) ?? {
-    name: "",
-    events: [],
-    major: "",
-    gradYear: "",
-    image: "",
-  };
-  candidate.name =
-    `${row[columns.firstName] ?? ""} ${row[columns.lastName] ?? ""}`.trim() || candidate.name;
-  const event = row[columns.event]?.trim();
-  if (event && !candidate.events.includes(event)) candidate.events.push(event);
-  candidate.major = row[columns.major]?.trim() || candidate.major;
-  candidate.gradYear = row[columns.gradYear]?.trim() || candidate.gradYear;
-  candidate.image = driveId(row[columns.image] ?? "") || candidate.image;
-  candidates.set(email, candidate);
-}
-
-console.log(`${apply ? "Importing" : "Would import"} ${candidates.size} deliberation candidates.`);
-if (apply) {
-  let batch = adminDb.batch();
-  let operations = 0;
-  for (const [email, candidate] of candidates) {
-    batch.set(adminDb.doc(`delibs/${email}`), candidate, { merge: true });
-    operations += 1;
-    if (operations >= 450) {
-      await batch.commit();
-      batch = adminDb.batch();
-      operations = 0;
-    }
-  }
-  if (operations) await batch.commit();
-  console.log("Candidate import complete.");
-} else {
-  console.log("Dry run only. Re-run with --apply to write changes.");
-}
+run().catch((error) => {
+  console.error("Migration failed with error:", error);
+  process.exit(1);
+});
