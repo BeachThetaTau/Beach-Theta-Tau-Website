@@ -4,12 +4,18 @@ import AdminDashboard from "../components/AdminDashboard/AdminDashboard";
 import MemberBallot from "../components/MemberBallot/MemberBallot";
 import { useDelibsSession } from "../hooks/useDelibsSession";
 
-export function DeliberationsPage({ adminOnly = false }: { adminOnly?: boolean }) {
+export function DeliberationsPage({
+  adminOnly = false,
+  adminVoting = false,
+}: {
+  adminOnly?: boolean;
+  adminVoting?: boolean;
+}) {
   const { hasRole } = useAuth();
   const isAdmin = adminOnly || hasRole("admin");
   const { active, loading } = useDelibsSession();
 
-  if (isAdmin) return <AdminDashboard />;
+  if (isAdmin && !adminVoting) return <AdminDashboard />;
 
   if (loading) return <LoadingState label="Checking deliberations…" />;
 

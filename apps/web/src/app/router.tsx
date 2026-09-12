@@ -58,6 +58,10 @@ export const router = createBrowserRouter([
         children: [
           { path: "admin", element: <AdminPanelPage /> },
           { path: "admin/deliberations", element: <DeliberationsPage adminOnly /> },
+          {
+            path: "admin/deliberations/vote",
+            element: <DeliberationsPage adminOnly adminVoting />,
+          },
         ],
       },
     ],

@@ -48,6 +48,13 @@ export function DelibsProfileActions() {
               </button>
               <button
                 type="button"
+                className={primaryButton}
+                onClick={() => navigate("/admin/deliberations/vote")}
+              >
+                Cast your vote
+              </button>
+              <button
+                type="button"
                 className={dangerButton}
                 disabled={pending}
                 onClick={() => void toggle(false)}
