@@ -58,7 +58,7 @@ export function useBallot() {
     });
     setSaving(true);
     try {
-      await castVote(candidateId, nextVote);
+      await castVote(candidateId, nextVote, account.uid);
     } catch (nextError) {
       setVotes((current) => {
         const next = { ...current };

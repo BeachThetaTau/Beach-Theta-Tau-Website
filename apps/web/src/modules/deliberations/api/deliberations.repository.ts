@@ -1,7 +1,9 @@
 import type { DeliberationCandidate, VoteChoice, VoteTotals } from "@beach-theta-tau/contracts";
 import {
   collection,
+  deleteField,
   doc,
+  FieldPath,
   getDocs,
   limit,
   onSnapshot,
@@ -12,9 +14,8 @@ import {
   writeBatch,
   type Unsubscribe,
 } from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
+import { auth } from "@/shared/lib/firebase/auth";
 import { db } from "@/shared/lib/firebase/firestore";
-import { functions } from "@/shared/lib/firebase/functions";
 
 export async function listCandidates(): Promise<DeliberationCandidate[]> {
   const snapshot = await getDocs(collection(db, "delibs"));
@@ -107,16 +108,20 @@ export function subscribeMemberVotes(
   );
 }
 
-const castVoteCallable = httpsCallable<
-  { candidateId: string; vote: VoteChoice | null },
-  { candidateId: string; vote: VoteChoice | null }
->(functions, "castVote");
+// Votes are written directly to the user's document in Firestore (users/{uid})
+// under the `votes` dictionary: { [candidateId]: VoteChoice }.
+export async function castVote(
+  candidateId: string,
+  vote: VoteChoice | null,
+  userId?: string,
+): Promise<void> {
+  const uid = userId ?? auth.currentUser?.uid;
+  if (!uid) {
+    throw new Error("You must be logged in to cast a vote.");
+  }
 
-// Votes are written server-side by the castVote Cloud Function, which enforces
-// that the caller is a verified member and that the candidate is the active one.
-// Direct client writes to users/{uid}.votes are blocked by Firestore rules.
-export async function castVote(candidateId: string, vote: VoteChoice | null): Promise<void> {
-  await castVoteCallable({ candidateId, vote });
+  const userRef = doc(db, "users", uid);
+  await updateDoc(userRef, new FieldPath("votes", candidateId), vote ?? deleteField());
 }
 
 export function subscribeVoteTotals(
@@ -245,4 +250,3 @@ export async function clearAllDeliberationsData(): Promise<{
     clearedUsersCount,
   };
 }
-

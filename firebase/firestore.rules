@@ -17,20 +17,28 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
-      allow read: if isOwner(uid) || isAdmin() || resource.data.verified == true;
+      allow read: if signedIn();
       allow create: if isOwner(uid) &&
         request.resource.data.verified == false &&
         request.resource.data.copied == false;
       allow update: if isAdmin() || (
         isOwner(uid) &&
-        // Votes are intentionally excluded: they are written only by the
-        // castVote Cloud Function (verified members, active candidate).
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-          'name', 'major', 'class', 'gradYear', 'linkedIn', 'resumeLink',
-          'email', 'verified', 'copied'
-        ]) &&
-        request.resource.data.verified == false &&
-        request.resource.data.copied == false
+        (
+          // Verified members may cast or remove votes in their `votes` dictionary
+          (
+            resource.data.verified == true &&
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes'])
+          ) ||
+          // Members can edit their own profile fields without escalating permissions
+          (
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'name', 'major', 'class', 'gradYear', 'linkedIn', 'resumeLink',
+              'email', 'verified', 'copied'
+            ]) &&
+            request.resource.data.verified == resource.data.verified &&
+            request.resource.data.copied == resource.data.copied
+          )
+        )
       );
       allow delete: if isAdmin();
     }
