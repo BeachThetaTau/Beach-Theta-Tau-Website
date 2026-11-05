@@ -29,7 +29,7 @@ export function SiteFooter() {
     <footer className="bg-footer text-footer-text">
       <div className="container-page flex flex-col gap-10 py-12 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
-          <img src="/Logo.png" alt="Theta Tau logo" className="h-16 w-16 shrink-0" />
+          <img src="/logo.svg" alt="Theta Tau logo" className="h-16 w-16 shrink-0" />
           <div className="flex flex-col gap-0.5">
             <p className="m-0 font-semibold text-white">Theta Tau</p>
             <p className="m-0 text-sm">Xi Epsilon Chapter</p>
