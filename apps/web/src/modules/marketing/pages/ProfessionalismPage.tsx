@@ -1,7 +1,7 @@
 import ImageCarousel from "../components/ImageCarousel/ImageCarousel";
 import PageHero from "@/shared/ui/PageHero/PageHero";
-import CareerHighlights from "../components/CareerHighlights/CareerHighlights";
 import SponsorCarousel from "../components/SponsorCarousel/SponsorCarousel";
+import CareerHighlights from "../components/CareerHighlights/CareerHighlights";
 
 const supportCards = [
   {
