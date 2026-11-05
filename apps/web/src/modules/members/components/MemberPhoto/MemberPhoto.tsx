@@ -1,5 +1,6 @@
 import type { MemberProfile } from "@beach-theta-tau/contracts";
 import { useState } from "react";
+import { FaUserTie } from "react-icons/fa";
 import { memberPhotoSources } from "../../utils/member-photos";
 
 interface MemberPhotoProps {
@@ -10,7 +11,7 @@ interface MemberPhotoProps {
   className?: string;
 }
 
-/** Each URL gets one attempt; even a broken placeholder cannot cause a retry loop. */
+/** Each portrait URL gets one attempt before displaying the profile icon. */
 export function MemberPhoto({
   member,
   size = "thumbnail",
@@ -27,14 +28,9 @@ export function MemberPhoto({
       <div
         role="img"
         aria-label={alt}
-        className="flex h-full w-full items-center justify-center bg-panel text-4xl font-bold text-muted"
+        className={`flex items-center justify-center bg-panel text-muted ${className}`}
       >
-        {member.name
-          .trim()
-          .split(/\s+/)
-          .map((part) => part[0])
-          .slice(0, 2)
-          .join("") || "?"}
+        <FaUserTie className="h-2/3 w-2/3" aria-hidden="true" />
       </div>
     );
   }

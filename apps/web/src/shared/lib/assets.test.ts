@@ -59,10 +59,6 @@ describe("verify all static assets referenced in codebase", () => {
     "Kaiser.png",
     "Amazon.png",
     "SCE.png",
-
-    // Fallbacks
-    "Brothers/blank-pfp.webp",
-    "Brothers/blankpfp.webp",
   ];
 
   for (const asset of referencedAssets) {

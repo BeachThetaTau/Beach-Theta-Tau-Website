@@ -84,7 +84,7 @@ function memberPhotoFilename(member: Pick<MemberProfile, "name">): string {
 
 /** Full-size (900px) photo, used in the details modal. */
 export function memberPhotoUrl(member: Pick<MemberProfile, "name" | "verified">): string {
-  if (!member.verified) return "Brothers/blank-pfp.webp";
+  if (!member.verified) return "";
   return `Brothers/${memberPhotoFilename(member)}.webp`;
 }
 
@@ -92,6 +92,6 @@ export function memberPhotoUrl(member: Pick<MemberProfile, "name" | "verified">)
  * memberPhotoSources explicitly falls back when a thumbnail is missing.
  */
 export function memberThumbUrl(member: Pick<MemberProfile, "name" | "verified">): string {
-  if (!member.verified) return "Brothers/blank-pfp.webp";
+  if (!member.verified) return "";
   return `members/BrothersThumbs/${memberPhotoFilename(member)}.webp`;
 }

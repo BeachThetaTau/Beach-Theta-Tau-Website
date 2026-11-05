@@ -26,7 +26,6 @@ const FULL_WIDTH = 900;
 const THUMB_WIDTH = 400;
 const HERO_WIDTH = 2400;
 const HERO_FILES = ["Eboard.JPG", "Eboard2.JPG", "Brothers.jpg"];
-const SKIP = new Set(["blank-pfp.webp", "blankpfp.webp"]);
 
 const kb = (bytes: number) => `${Math.round(bytes / 1024)} KB`;
 
@@ -36,8 +35,6 @@ let before = 0;
 let after = 0;
 
 for (const file of (await readdir(fullDir)).filter((name) => name.endsWith(".webp"))) {
-  if (SKIP.has(file)) continue;
-
   const source = path.join(fullDir, file);
   const sizeBefore = (await stat(source)).size;
   const { width = 0 } = await sharp(source).metadata();

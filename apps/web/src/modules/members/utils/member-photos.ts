@@ -7,13 +7,13 @@ const prefetched = new Set<string>();
 
 /** Resolve only files present in the build. Missing portraits are normal. */
 export function memberPhotoSources(member: PhotoMember, size: "thumbnail" | "full") {
+  if (!member.verified) return [];
   const full = findAssetUrl(`members/${memberPhotoUrl(member)}`);
   const thumb = findAssetUrl(memberThumbUrl(member));
-  const placeholder = findAssetUrl("members/Brothers/blank-pfp.webp");
   return [
     ...new Set(
-      (size === "thumbnail" ? [thumb, full, placeholder] : [full, thumb, placeholder]).filter(
-        (url): url is string => Boolean(url),
+      (size === "thumbnail" ? [thumb, full] : [full, thumb]).filter((url): url is string =>
+        Boolean(url),
       ),
     ),
   ];

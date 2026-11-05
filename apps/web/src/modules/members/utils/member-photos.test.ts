@@ -13,17 +13,13 @@ describe("member photo resolution", () => {
     expect(memberPhotoSources(member, "full")[0]).toBe(full);
   });
 
-  it("quietly selects the placeholder for missing or unverified portraits", () => {
+  it("returns no image sources for missing or unverified portraits", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     try {
-      const placeholder = findAssetUrl("members/Brothers/blank-pfp.webp");
-      expect(placeholder).toBeTruthy();
-      expect(memberPhotoSources({ name: "Missing Person", verified: true }, "thumbnail")).toEqual([
-        placeholder,
-      ]);
-      expect(memberPhotoSources({ name: "Zehra Tezel", verified: false }, "full")).toEqual([
-        placeholder,
-      ]);
+      expect(memberPhotoSources({ name: "Missing Person", verified: true }, "thumbnail")).toEqual(
+        [],
+      );
+      expect(memberPhotoSources({ name: "Zehra Tezel", verified: false }, "full")).toEqual([]);
       prefetchMemberPhoto({ name: "Missing Person", verified: true });
       expect(warn).not.toHaveBeenCalled();
     } finally {
