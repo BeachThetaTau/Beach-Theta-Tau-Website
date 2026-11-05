@@ -1,6 +1,5 @@
 import type { MemberProfile } from "@beach-theta-tau/contracts";
 import { useMemo } from "react";
-import { useInfiniteScroll } from "@/shared/hooks/useInfiniteScroll";
 import { greekAlphabetOrder, groupMembersByClass } from "../../utils/member-sorting";
 import { MemberCard } from "../MemberCard/MemberCard";
 
@@ -9,46 +8,24 @@ interface MemberGridProps {
   onSelect: (member: MemberProfile) => void;
 }
 
-interface FlatEntry {
-  letter: string;
-  member: MemberProfile;
-}
+/**
+ * How grid photos load. Thumbnails are ~10-30 KB each, so "eager" (fetch them
+ * all up front) is cheap for a chapter-sized roster. Switch to "lazy" to defer
+ * offscreen photos until they near the viewport; compare the two on mobile.
+ */
+const PHOTO_LOADING: "eager" | "lazy" = "eager";
 
-interface ClassSection {
-  letter: string;
-  members: MemberProfile[];
-}
-
-/** Photos in the first few rows load eagerly; everything below is lazy. */
-const PRIORITY_PHOTO_COUNT = 10;
+/** Photos in the first few rows also get a high fetch priority. */
+const HIGH_PRIORITY_PHOTO_COUNT = 10;
 
 export function MemberGrid({ members, onSelect }: MemberGridProps) {
-  // Flatten into a single ordered list (newest class first, members A–Z within
-  // a class) so we can reveal them incrementally while still drawing per-class
-  // headers when a section becomes visible.
-  const ordered = useMemo<FlatEntry[]>(() => {
+  // Newest class first, members A–Z within a class. Every class renders at once.
+  const sections = useMemo(() => {
     const grouped = groupMembersByClass(members);
-    return greekAlphabetOrder.flatMap((letter) =>
-      (grouped[letter] ?? []).map((member) => ({ letter, member })),
-    );
+    return greekAlphabetOrder
+      .map((letter) => ({ letter, members: grouped[letter] ?? [] }))
+      .filter((section) => section.members.length > 0);
   }, [members]);
-
-  const { visibleCount, hasMore, loadMore, sentinelRef } = useInfiniteScroll(ordered.length, {
-    initial: 40,
-    pageSize: 40,
-  });
-
-  // Regroup only the currently visible slice back into contiguous class
-  // sections for rendering.
-  const sections = useMemo<ClassSection[]>(() => {
-    const result: ClassSection[] = [];
-    for (const { letter, member } of ordered.slice(0, visibleCount)) {
-      const last = result[result.length - 1];
-      if (last && last.letter === letter) last.members.push(member);
-      else result.push({ letter, members: [member] });
-    }
-    return result;
-  }, [ordered, visibleCount]);
 
   return (
     <div className="flex flex-col gap-16">
@@ -62,7 +39,8 @@ export function MemberGrid({ members, onSelect }: MemberGridProps) {
             {section.members.map((member, memberIndex) => (
               <MemberCard
                 member={member}
-                priority={sectionIndex === 0 && memberIndex < PRIORITY_PHOTO_COUNT}
+                loading={PHOTO_LOADING}
+                highPriority={sectionIndex === 0 && memberIndex < HIGH_PRIORITY_PHOTO_COUNT}
                 onSelect={onSelect}
                 key={member.uid ?? member.name}
               />
@@ -70,33 +48,6 @@ export function MemberGrid({ members, onSelect }: MemberGridProps) {
           </div>
         </section>
       ))}
-
-      {ordered.length > 0 && (
-        <div className="container-page flex flex-col items-center gap-4">
-          {/* Auto-load trigger: revealed as the user nears the end of the list. */}
-          <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
-          {hasMore ? (
-            <>
-              <button
-                type="button"
-                onClick={loadMore}
-                className="rounded-full border border-line px-6 py-2.5 text-sm font-semibold text-maroon transition-colors hover:border-maroon hover:bg-maroon hover:text-white"
-              >
-                Load more brothers
-              </button>
-              <p className="text-sm text-muted" aria-live="polite">
-                Showing {Math.min(visibleCount, ordered.length)} of {ordered.length}
-              </p>
-            </>
-          ) : (
-            ordered.length > 40 && (
-              <p className="text-sm text-muted" aria-live="polite">
-                All {ordered.length} brothers loaded
-              </p>
-            )
-          )}
-        </div>
-      )}
     </div>
   );
 }

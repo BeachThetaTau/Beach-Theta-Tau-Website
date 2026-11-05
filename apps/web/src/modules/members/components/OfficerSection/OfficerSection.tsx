@@ -20,6 +20,7 @@ export function OfficerSection({ title, members, onSelect }: OfficerSectionProps
           <MemberCard
             member={member}
             showPosition
+            loading="eager"
             onSelect={onSelect}
             key={member.uid ?? member.name}
           />

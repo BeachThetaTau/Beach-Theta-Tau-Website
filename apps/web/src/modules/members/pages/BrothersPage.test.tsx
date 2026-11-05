@@ -61,7 +61,23 @@ describe("BrothersPage loading", () => {
     renderPage();
     const image = await screen.findByAltText("Alex Smith's profile");
     expect(image.getAttribute("src")).toMatch(/\.webp$/);
-    expect(image).toHaveAttribute("loading");
+    expect(image).toHaveAttribute("loading", "eager");
     expect(image).toHaveAttribute("width", "400");
+  });
+
+  it("renders every member at once, with no load-more or infinite scroll", async () => {
+    const roster: MemberProfile[] = Array.from({ length: 60 }, (_, index) => ({
+      uid: `uid-${index}`,
+      name: `Member ${String.fromCharCode(65 + (index % 26))}${"x".repeat(Math.floor(index / 26))}`,
+      class: "Alpha",
+      verified: true,
+    }));
+    vi.mocked(repo.getVerifiedMembers).mockResolvedValue(roster);
+    renderPage();
+
+    await screen.findAllByRole("heading", { level: 3 });
+    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(60);
+    expect(screen.queryByRole("button", { name: /load more/i })).not.toBeInTheDocument();
+    expect(screen.queryByText(/showing \d+ of/i)).not.toBeInTheDocument();
   });
 });
