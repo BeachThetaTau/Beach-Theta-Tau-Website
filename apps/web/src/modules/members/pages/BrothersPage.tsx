@@ -1,8 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
-import "react-lazy-load-image-component/src/effects/blur.css";
 import PageHero from "@/shared/ui/PageHero/PageHero";
 import { EmptyState } from "@/shared/ui/EmptyState/EmptyState";
-import { LoadingState } from "@/shared/ui/LoadingState/LoadingState";
 import {
   chairMembersAtom,
   executiveBoardMembersAtom,
@@ -12,6 +10,7 @@ import {
 import { MemberDetailsModal } from "../components/MemberDetailsModal/MemberDetailsModal";
 import { MemberDirectoryFilters } from "../components/MemberDirectoryFilters/MemberDirectoryFilters";
 import { MemberGrid } from "../components/MemberGrid/MemberGrid";
+import { MemberGridSkeleton } from "../components/MemberGridSkeleton/MemberGridSkeleton";
 import { OfficerSection } from "../components/OfficerSection/OfficerSection";
 import { useMembers } from "../hooks/useMembers";
 
@@ -35,7 +34,7 @@ export function BrothersPage() {
         </div>
 
         <div className="mt-12">
-          {loading && <LoadingState label="Loading the member directory…" />}
+          {loading && <MemberGridSkeleton />}
           {error && <EmptyState title="Member directory unavailable" description={error} />}
           {!loading && !error && members.length === 0 && (
             <EmptyState
@@ -70,4 +69,3 @@ export function BrothersPage() {
 }
 
 export default BrothersPage;
-

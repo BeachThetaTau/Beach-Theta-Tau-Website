@@ -19,6 +19,9 @@ interface ClassSection {
   members: MemberProfile[];
 }
 
+/** Photos in the first few rows load eagerly; everything below is lazy. */
+const PRIORITY_PHOTO_COUNT = 10;
+
 export function MemberGrid({ members, onSelect }: MemberGridProps) {
   // Flatten into a single ordered list (newest class first, members A–Z within
   // a class) so we can reveal them incrementally while still drawing per-class
@@ -49,15 +52,20 @@ export function MemberGrid({ members, onSelect }: MemberGridProps) {
 
   return (
     <div className="flex flex-col gap-16">
-      {sections.map((section) => (
+      {sections.map((section, sectionIndex) => (
         <section key={section.letter} className="container-page">
           <div className="mb-8 flex items-center gap-4">
             <h2 className="subsection-title whitespace-nowrap">{section.letter}</h2>
             <span className="h-px flex-1 bg-line" />
           </div>
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {section.members.map((member) => (
-              <MemberCard member={member} onSelect={onSelect} key={member.uid ?? member.name} />
+            {section.members.map((member, memberIndex) => (
+              <MemberCard
+                member={member}
+                priority={sectionIndex === 0 && memberIndex < PRIORITY_PHOTO_COUNT}
+                onSelect={onSelect}
+                key={member.uid ?? member.name}
+              />
             ))}
           </div>
         </section>

@@ -2,10 +2,10 @@ import type { MemberProfile } from "@beach-theta-tau/contracts";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useState } from "react";
 import { assetUrl } from "@/shared/lib/assets";
 import Modal from "@/shared/ui/Modal/Modal";
-import { memberPhotoUrl } from "../../utils/member-sorting";
+import { memberPhotoUrl, memberThumbUrl } from "../../utils/member-sorting";
 
 interface MemberDetailsModalProps {
   member: MemberProfile | null;
@@ -14,6 +14,9 @@ interface MemberDetailsModalProps {
 
 export function MemberDetailsModal({ member, onClose }: MemberDetailsModalProps) {
   const fallback = assetUrl("Brothers/blank-pfp.webp");
+
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const photoSrc = member ? assetUrl(memberPhotoUrl(member)) || fallback : "";
 
   return (
     <Modal isOpen={Boolean(member)} onClose={onClose} ariaLabel="Member details">
@@ -30,13 +33,22 @@ export function MemberDetailsModal({ member, onClose }: MemberDetailsModalProps)
 
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:gap-7 sm:text-left">
             <div className="w-64 flex-none sm:w-72">
-              <div className="overflow-hidden rounded-lg shadow-card">
-                <LazyLoadImage
-                  effect="blur"
-                  className="aspect-[3/4] w-full object-cover"
-                  src={assetUrl(memberPhotoUrl(member)) || fallback}
+              <div
+                className="aspect-[3/4] overflow-hidden rounded-lg bg-panel bg-cover bg-center shadow-card"
+                style={{
+                  backgroundImage: `url("${assetUrl(memberThumbUrl(member)) || fallback}")`,
+                }}
+              >
+                <img
+                  key={member.uid ?? member.name}
+                  className={`h-full w-full object-cover transition-opacity duration-300 ${loadedSrc === photoSrc ? "opacity-100" : "opacity-0"}`}
+                  src={photoSrc}
+                  width={900}
+                  height={1200}
+                  decoding="async"
+                  onLoad={() => setLoadedSrc(photoSrc)}
                   onError={(event) => {
-                    event.currentTarget.src = fallback;
+                    if (event.currentTarget.src !== fallback) event.currentTarget.src = fallback;
                   }}
                   alt={`${member.name}'s profile`}
                 />
