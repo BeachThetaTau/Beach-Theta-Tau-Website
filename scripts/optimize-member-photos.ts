@@ -25,7 +25,7 @@ const thumbDir = path.join(membersDir, "BrothersThumbs");
 const FULL_WIDTH = 900;
 const THUMB_WIDTH = 400;
 const HERO_WIDTH = 2400;
-const HERO_FILES = ["Eboard.JPG", "Eboard2.JPG", "Brothers.jpg"];
+const HERO_FILES = ["Eboard2.JPG", "Brothers.jpg"];
 
 const kb = (bytes: number) => `${Math.round(bytes / 1024)} KB`;
 
