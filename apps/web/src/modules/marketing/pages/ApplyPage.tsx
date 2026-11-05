@@ -1,3 +1,4 @@
+import { LuCheck } from "react-icons/lu";
 import PageHero from "@/shared/ui/PageHero/PageHero";
 import RushTimeline from "../components/RushTimeline/RushTimeline";
 import OutlinedButton from "@/shared/ui/OutlinedButton/OutlinedButton";
@@ -31,23 +32,6 @@ const attire = [
     text: "Blazers, sport coats, or professional cardigans can be worn over tops. Avoid hoodies, denim jackets, or casual outerwear indoors.",
   },
 ];
-
-function CheckIcon() {
-  return (
-    <svg
-      className="mt-0.5 h-5 w-5 flex-none text-gold"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path
-        fillRule="evenodd"
-        d="M16.704 5.29a1 1 0 0 1 0 1.42l-7.5 7.5a1 1 0 0 1-1.42 0l-3.5-3.5a1 1 0 1 1 1.42-1.42l2.79 2.79 6.79-6.79a1 1 0 0 1 1.42 0Z"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
-}
 
 export function ApplyPage() {
   return (
@@ -99,7 +83,7 @@ export function ApplyPage() {
             <ul className="mt-5 list-none space-y-4 p-0">
               {eligibility.map((item) => (
                 <li key={item} className="flex gap-3">
-                  <CheckIcon />
+                  <LuCheck className="mt-0.5 h-5 w-5 flex-none text-gold" aria-hidden="true" />
                   <span className="prose-body">{item}</span>
                 </li>
               ))}

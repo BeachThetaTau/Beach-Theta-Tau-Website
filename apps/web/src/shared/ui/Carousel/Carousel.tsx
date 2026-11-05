@@ -1,3 +1,4 @@
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { assetUrl } from "../../lib/assets";
 
@@ -91,7 +92,7 @@ export function Carousel({
             aria-label="Previous slide"
             className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/30 text-lg text-white transition-colors hover:bg-black/50"
           >
-            ‹
+            <LuChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -99,7 +100,7 @@ export function Carousel({
             aria-label="Next slide"
             className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/30 text-lg text-white transition-colors hover:bg-black/50"
           >
-            ›
+            <LuChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
         </>
       )}

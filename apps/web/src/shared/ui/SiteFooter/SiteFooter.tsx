@@ -1,23 +1,24 @@
-import { assetUrl } from "../../lib/assets";
+import { FaInstagram, FaFacebook } from "react-icons/fa";
+import { LuMail } from "react-icons/lu";
 
 const socials = [
   {
     href: "https://www.instagram.com/beachthetatau/",
-    img: "ig.png",
+    icon: FaInstagram,
     alt: "Instagram",
     label: "@beachthetatau",
     external: true,
   },
   {
     href: "https://www.facebook.com/beachthetatau/",
-    img: "fb.png",
+    icon: FaFacebook,
     alt: "Facebook",
     label: "CSULB Theta Tau",
     external: true,
   },
   {
     href: "mailto:beachthetatau@gmail.com",
-    img: "mail.png",
+    icon: LuMail,
     alt: "E-mail",
     label: "beachthetatau@gmail.com",
     external: false,
@@ -43,12 +44,13 @@ export function SiteFooter() {
         <div className="flex flex-col gap-3">
           {socials.map((social) => (
             <a
-              key={social.img}
+              key={social.href}
               href={social.href}
+              aria-label={`${social.alt}: ${social.label}`}
               className="group inline-flex items-center gap-3 no-underline transition-colors hover:text-white"
               {...(social.external ? { target: "_blank", rel: "noreferrer" } : {})}
             >
-              <img src={assetUrl(social.img)} alt={social.alt} className="h-6 w-6" />
+              <social.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
               <span className="text-sm">{social.label}</span>
             </a>
           ))}

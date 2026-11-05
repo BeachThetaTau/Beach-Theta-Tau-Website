@@ -1,3 +1,4 @@
+import { LuMenu, LuX } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { NavLink } from "react-router-dom";
@@ -79,10 +80,8 @@ export function MobileNavigation({ userEmail }: MobileNavigationProps) {
           aria-label={isOpen ? "Close menu" : "Open menu"}
           onClick={toggleMenu}
         >
-          <span className="bmenu__ham">
-            <span className="bmenu__ham-label">
-              <span className="sr-only">{isOpen ? "Close menu" : "Open menu"}</span>
-            </span>
+          <span className="bmenu__icon" aria-hidden="true">
+            {isOpen ? <LuX size={28} /> : <LuMenu size={28} />}
           </span>
         </button>
       </div>

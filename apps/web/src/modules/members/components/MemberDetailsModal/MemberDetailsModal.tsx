@@ -1,7 +1,6 @@
+import { FaLinkedin } from "react-icons/fa";
+import { LuFileText, LuX } from "react-icons/lu";
 import type { MemberProfile } from "@beach-theta-tau/contracts";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faFile } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "@/shared/ui/Modal/Modal";
 import { MemberPhoto } from "../MemberPhoto/MemberPhoto";
 
@@ -21,7 +20,7 @@ export function MemberDetailsModal({ member, onClose }: MemberDetailsModalProps)
             aria-label="Close member details"
             className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full text-2xl leading-none text-muted transition-colors hover:bg-surface-soft hover:text-ink"
           >
-            &times;
+            <LuX className="h-6 w-6" aria-hidden="true" />
           </button>
 
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:gap-7 sm:text-left">
@@ -66,7 +65,7 @@ export function MemberDetailsModal({ member, onClose }: MemberDetailsModalProps)
                       className="group inline-flex items-center gap-2 rounded-full border-2 border-[#0072b1] bg-white px-4 py-1.5 text-sm font-bold text-[#0072b1] no-underline transition-colors duration-300 hover:bg-[#0072b1] hover:text-white"
                     >
                       <span>LinkedIn</span>
-                      <FontAwesomeIcon icon={faLinkedin} className="text-lg" />
+                      <FaLinkedin className="text-lg" aria-hidden="true" />
                     </a>
                   )}
                   {member.resumeLink && (
@@ -77,7 +76,7 @@ export function MemberDetailsModal({ member, onClose }: MemberDetailsModalProps)
                       className="group inline-flex items-center gap-2 rounded-full border-2 border-brand bg-white px-4 py-1.5 text-sm font-bold text-brand no-underline transition-colors duration-300 hover:bg-brand hover:text-white"
                     >
                       <span>Resume</span>
-                      <FontAwesomeIcon icon={faFile} className="text-lg" />
+                      <LuFileText className="text-lg" aria-hidden="true" />
                     </a>
                   )}
                 </div>

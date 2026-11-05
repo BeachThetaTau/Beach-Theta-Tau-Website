@@ -1,8 +1,16 @@
-import type { MemberProfile } from "@beach-theta-tau/contracts";
 import {
-  EXECUTIVE_BOARD_POSITIONS,
-  COMMITTEE_CHAIR_POSITIONS,
-} from "@beach-theta-tau/contracts";
+  LuUsers,
+  LuCircleCheck,
+  LuClock,
+  LuVote,
+  LuSearch,
+  LuTrash2,
+  LuGraduationCap,
+  LuRotateCcw,
+  LuShield,
+} from "react-icons/lu";
+import type { MemberProfile } from "@beach-theta-tau/contracts";
+import { EXECUTIVE_BOARD_POSITIONS, COMMITTEE_CHAIR_POSITIONS } from "@beach-theta-tau/contracts";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   adminDeleteAlumni,
@@ -434,7 +442,9 @@ export function AdminMembersPanel({ refreshKey }: { refreshKey?: number } = {}) 
             {filteredUsers.length === 0 ? (
               <div className="mt-6 rounded-lg border border-dashed border-line bg-white/60 px-6 py-12 text-center">
                 <p className="font-medium text-ink">No active members match your search</p>
-                <p className="mt-1 text-sm text-muted">Try a different name, email, major, position, or "admin".</p>
+                <p className="mt-1 text-sm text-muted">
+                  Try a different name, email, major, position, or "admin".
+                </p>
               </div>
             ) : (
               <div className="mt-6 overflow-hidden rounded-xl border border-line bg-white">
@@ -500,7 +510,11 @@ export function AdminMembersPanel({ refreshKey }: { refreshKey?: number } = {}) 
                               />
                             </td>
                             <td className="px-4 py-3">
-                              <StatusPill on={Boolean(user.copied)} onLabel="Copied" offLabel="No" />
+                              <StatusPill
+                                on={Boolean(user.copied)}
+                                onLabel="Copied"
+                                offLabel="No"
+                              />
                             </td>
                             <td className="px-4 py-3 text-right">
                               <div className="flex items-center justify-end gap-1.5">
@@ -984,178 +998,39 @@ function ToggleField({
 }
 
 function IconPeople() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
+  return <LuUsers size={20} aria-hidden="true" />;
 }
 
 function IconCheck() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <path d="M22 4 12 14.01l-3-3" />
-    </svg>
-  );
+  return <LuCircleCheck size={20} aria-hidden="true" />;
 }
 
 function IconClock() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v6l4 2" />
-    </svg>
-  );
+  return <LuClock size={20} aria-hidden="true" />;
 }
 
 function IconBallot() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="3" y="4" width="18" height="16" rx="2" />
-      <path d="m7 10 2 2 4-4" />
-      <path d="M16 15h2" />
-    </svg>
-  );
+  return <LuVote size={20} aria-hidden="true" />;
 }
 
 function IconSearch() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
+  return <LuSearch size={16} aria-hidden="true" />;
 }
 
 function IconTrash({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M3 6h18" />
-      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-      <line x1="10" y1="11" x2="10" y2="17" />
-      <line x1="14" y1="11" x2="14" y2="17" />
-    </svg>
-  );
+  return <LuTrash2 className={className} aria-hidden="true" />;
 }
 
 function IconMortarboard({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-      <path d="M6 12v5c3 3 9 3 12 0v-5" />
-    </svg>
-  );
+  return <LuGraduationCap className={className} aria-hidden="true" />;
 }
 
 function IconRestore({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-      <path d="M3 3v5h5" />
-    </svg>
-  );
+  return <LuRotateCcw className={className} aria-hidden="true" />;
 }
 
 function IconShield({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  );
+  return <LuShield className={className} aria-hidden="true" />;
 }
 
 export default AdminMembersPanel;
-
-
-

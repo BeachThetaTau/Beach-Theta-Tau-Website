@@ -1,25 +1,25 @@
 import { Link } from "react-router-dom";
-import { assetUrl } from "@/shared/lib/assets";
+import { LuHeartHandshake, LuBriefcaseBusiness, LuHandshake } from "react-icons/lu";
 import Button from "@/shared/ui/Button/Button";
 
 const pillars = [
   {
     title: "Philanthropy",
-    image: "PhilanthrophyIcon.png",
+    icon: LuHeartHandshake,
     route: "/service",
     description:
       "We encourage members to give back to their communities through volunteer activities, philanthropic initiatives, and service projects.",
   },
   {
     title: "Professionalism",
-    image: "ProfessionalismIcon.png",
+    icon: LuBriefcaseBusiness,
     route: "/professionalism",
     description:
       "Members uphold high standards of ethics, integrity, and responsibility in academic, personal, and professional work.",
   },
   {
     title: "Brotherhood",
-    image: "BrotherhoodIcon.png",
+    icon: LuHandshake,
     route: "/social",
     description:
       "We cultivate strong friendships and a supportive environment where members connect, collaborate, and grow together.",
@@ -40,7 +40,7 @@ export function PillarsSection() {
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {pillars.map((pillar) => (
             <div key={pillar.title} className="card flex flex-col items-start gap-4 p-8">
-              <img src={assetUrl(pillar.image)} alt="" className="h-16 w-16 object-contain" />
+              <pillar.icon className="h-16 w-16 text-brand" aria-hidden="true" />
               <h3 className="subsection-title">{pillar.title}</h3>
               <p className="prose-body flex-1">{pillar.description}</p>
               <Link to={pillar.route} target="_top" className="no-underline">

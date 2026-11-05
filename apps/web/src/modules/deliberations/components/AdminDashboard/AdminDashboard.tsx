@@ -1,3 +1,4 @@
+import { LuX } from "react-icons/lu";
 import type { DeliberationCandidate } from "@beach-theta-tau/contracts";
 import { useEffect, useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
@@ -139,9 +140,10 @@ export function AdminDashboard() {
             <button
               className="absolute right-4 top-4 z-[1001] flex h-8 w-8 items-center justify-center rounded-full border-0 bg-transparent text-2xl text-muted transition-colors hover:bg-black/20"
               type="button"
+              aria-label="Close candidate details"
               onClick={() => setSelected(null)}
             >
-              ×
+              <LuX className="h-6 w-6" aria-hidden="true" />
             </button>
             <div className="flex h-full flex-row overflow-y-auto overflow-x-hidden rounded-3xl max-md:flex-col">
               <CandidateDetails candidate={selected} />

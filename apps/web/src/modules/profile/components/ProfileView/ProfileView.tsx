@@ -1,9 +1,9 @@
+import { LuPencil } from "react-icons/lu";
 import type { MemberProfile } from "@beach-theta-tau/contracts";
 
 interface ProfileViewProps {
   profile: MemberProfile;
   onEdit: () => void;
-  editIconUrl: string;
 }
 
 const labels: Record<string, string> = {
@@ -26,7 +26,7 @@ function displayValue(profile: MemberProfile, field: (typeof fields)[number]) {
   return value;
 }
 
-export function ProfileView({ profile, onEdit, editIconUrl }: ProfileViewProps) {
+export function ProfileView({ profile, onEdit }: ProfileViewProps) {
   return (
     <>
       <dl className="divide-y divide-line">
@@ -46,7 +46,7 @@ export function ProfileView({ profile, onEdit, editIconUrl }: ProfileViewProps) 
         aria-label="Edit profile"
       >
         Edit Profile
-        <img className="h-4 w-4" src={editIconUrl} alt="" />
+        <LuPencil className="h-4 w-4" aria-hidden="true" />
       </button>
     </>
   );

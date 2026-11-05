@@ -1,3 +1,4 @@
+import { LuX } from "react-icons/lu";
 import type { RetreatBingoCell } from "@beach-theta-tau/contracts";
 
 interface BingoCellProps {
@@ -21,7 +22,7 @@ export function BingoCell({ cell, onToggle }: BingoCellProps) {
           className="pointer-events-none absolute inset-0 flex items-center justify-center text-[4rem] font-bold text-brand/80"
           aria-hidden="true"
         >
-          ✕
+          <LuX className="h-16 w-16" aria-hidden="true" />
         </span>
       )}
     </button>

@@ -2,8 +2,8 @@
   MobileNavigation — expanding-circle hamburger menu.
 
   A fixed circle at the bottom-center of the viewport expands into a
-  full-screen maroon overlay while the hamburger morphs into an X. The
-  pseudo-element machinery (three lines + the scaling circle) can't be
+  full-screen maroon overlay while the menu icon switches to a close icon. The
+  expanding circle cannot be
   expressed with Tailwind utilities, so it lives here — but every colour,
   font and radius is driven by the project's design tokens (exposed on
   :root by the @theme block in tailwind.css) so it stays on-brand.
@@ -13,9 +13,6 @@
   /* tunables */
   --_circle-size: 6.25rem;
   --_circle-h: calc(var(--_circle-size) / 2);
-  --_thickness: 4px;
-  --_ham-w: 1.75rem;
-  --_ham-h: 1.25rem;
   --_overlay: var(--color-brand);
   --_line: #fff;
 
@@ -139,57 +136,13 @@
   transform: translate3d(-50vh, -50vh, 0) scale(5);
 }
 
-/* --- Hamburger lines --- */
-.bmenu__ham {
-  --_first: 0;
-  --_third: calc(100% - var(--_thickness));
-
+/* --- React icon toggle --- */
+.bmenu__icon {
   display: inline-flex;
-  inline-size: var(--_ham-w);
-  block-size: var(--_ham-h);
-
   position: absolute;
   inset-inline-start: 50%;
-  inset-block-end: 0.75rem;
+  inset-block-end: 0.5rem;
   transform: translateX(-50%);
-}
-
-.bmenu__ham::before,
-.bmenu__ham::after,
-.bmenu__ham-label {
-  content: "";
-  inline-size: 100%;
-  border-block-start: var(--_thickness) solid var(--_line);
-  border-radius: 5px;
-  position: absolute;
-}
-
-.bmenu__ham::before {
-  inset-block-start: var(--_first);
-}
-.bmenu__ham::after {
-  inset-block-start: var(--_third);
-}
-.bmenu__ham-label {
-  inset-block-start: calc(50% - (var(--_thickness) / 2));
-}
-
-.bmenu_active .bmenu__ham {
-  --_first: 50%;
-  --_third: 50%;
-}
-
-.bmenu_active .bmenu__ham::before {
-  transform: translate3d(0, -50%, 0) rotate(45deg);
-}
-
-.bmenu_active .bmenu__ham::after {
-  transform: translate3d(0, -50%, 0) rotate(135deg);
-}
-
-.bmenu_active .bmenu__ham-label {
-  transform: rotate(-45deg) translate3d(-0.285em, -0.3em, 0);
-  opacity: 0;
 }
 
 /* --- Motion --- */
@@ -204,16 +157,5 @@
 
   .bmenu_active .bmenu__toggle::before {
     transition-duration: 1s;
-  }
-
-  .bmenu__ham::before,
-  .bmenu__ham::after {
-    transition: transform 0.15s ease;
-  }
-
-  .bmenu__ham-label {
-    transition:
-      transform 0.15s ease,
-      opacity 0.15s ease;
   }
 }

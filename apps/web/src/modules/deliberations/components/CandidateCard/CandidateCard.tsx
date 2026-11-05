@@ -1,5 +1,5 @@
 import type { DeliberationCandidate } from "@beach-theta-tau/contracts";
-import { assetUrl } from "@/shared/lib/assets";
+import { LuCircleCheck } from "react-icons/lu";
 import { googleDriveThumbnail } from "@/shared/lib/urls";
 
 interface CandidateCardProps {
@@ -36,7 +36,7 @@ export function CandidateCard({ candidate, onSelect }: CandidateCardProps) {
       <div className="flex flex-row items-center justify-center gap-1 px-5 py-4">
         <span className="text-lg font-semibold text-ink">{candidate.name || "Unknown"}</span>
         {candidate.bidReceived && (
-          <img className="h-4 w-4" src={assetUrl("check.png")} alt="Bid received" />
+          <LuCircleCheck className="h-4 w-4 text-green-700" role="img" aria-label="Bid received" />
         )}
       </div>
     </button>

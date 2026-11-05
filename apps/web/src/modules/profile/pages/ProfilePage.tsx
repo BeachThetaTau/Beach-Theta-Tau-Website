@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/modules/auth";
-import { assetUrl } from "@/shared/lib/assets";
 import { EmptyState } from "@/shared/ui/EmptyState/EmptyState";
 import { LoadingState } from "@/shared/ui/LoadingState/LoadingState";
 import { MemberPhoto } from "@/modules/members/components/MemberPhoto/MemberPhoto";
@@ -62,11 +61,7 @@ export function ProfilePage() {
               onCancel={profileState.cancelEditing}
             />
           ) : (
-            <ProfileView
-              profile={profileState.profile}
-              onEdit={profileState.beginEditing}
-              editIconUrl={assetUrl("edit.png")}
-            />
+            <ProfileView profile={profileState.profile} onEdit={profileState.beginEditing} />
           )}
         </div>
       </div>
