@@ -6,7 +6,7 @@
   expanding circle cannot be
   expressed with Tailwind utilities, so it lives here — but every colour,
   font and radius is driven by the project's design tokens (exposed on
-  :root by the @theme block in tailwind.css) so it stays on-brand.
+  :root by the shared/themes definitions) so it stays on-brand.
 */
 
 .bmenu {
@@ -14,7 +14,7 @@
   --_circle-size: 6.25rem;
   --_circle-h: calc(var(--_circle-size) / 2);
   --_overlay: var(--color-brand);
-  --_line: #fff;
+  --_line: var(--color-surface);
 
   box-sizing: border-box;
   inline-size: 100%;
@@ -76,15 +76,15 @@
 }
 
 .bmenu__group {
-  padding: 0.5rem 2rem;
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 8);
   font-size: clamp(1.5rem, 6vw, 2rem);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 }
 
 .bmenu__link {
   display: inline-flex;
   color: var(--_line);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   text-decoration: none;
   transition: color 0.15s ease;
 }

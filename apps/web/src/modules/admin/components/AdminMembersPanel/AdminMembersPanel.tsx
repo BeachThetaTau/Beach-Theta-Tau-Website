@@ -727,10 +727,10 @@ export function AdminMembersPanel({ refreshKey }: { refreshKey?: number } = {}) 
               </div>
             </FieldGroup>
 
-            <div className="mt-6 rounded-xl border border-[#a52a2a]/30 bg-[#a52a2a]/5 p-4">
+            <div className="mt-6 rounded-xl border border-danger/30 bg-danger/5 p-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-[#a52a2a]">Votes</p>
+                  <p className="text-sm font-semibold text-danger">Votes</p>
                   <p className="text-xs text-muted">
                     {voteCount} vote(s) on record · votes can only be wiped, not edited
                   </p>
@@ -739,7 +739,7 @@ export function AdminMembersPanel({ refreshKey }: { refreshKey?: number } = {}) 
                   type="button"
                   onClick={handleWipeVotes}
                   disabled={wiping || voteCount === 0}
-                  className="rounded-full border border-[#a52a2a] px-4 py-1.5 text-sm font-medium text-[#a52a2a] transition-colors hover:bg-[#a52a2a] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-full border border-danger px-4 py-1.5 text-sm font-medium text-danger transition-colors hover:bg-danger hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {wiping ? "Wiping…" : "Wipe votes"}
                 </button>
@@ -773,7 +773,7 @@ export function AdminMembersPanel({ refreshKey }: { refreshKey?: number } = {}) 
               </div>
             </div>
 
-            {modalError && <p className="mt-4 text-sm text-[#a52a2a]">{modalError}</p>}
+            {modalError && <p className="mt-4 text-sm text-danger">{modalError}</p>}
 
             <div className="mt-8 flex justify-end gap-3 border-t border-line pt-4">
               <button
@@ -884,7 +884,7 @@ function PositionBadge({ position }: { position?: string }) {
 
 const STAT_TONES = {
   brand: "bg-brand/10 text-brand",
-  green: "bg-[#228b22]/10 text-[#228b22]",
+  green: "bg-success/10 text-success",
   gold: "bg-gold/15 text-gold-ink",
   purple: "bg-purple-100 text-purple-800",
   amber: "bg-amber-500/15 text-amber-800",
@@ -922,11 +922,11 @@ function StatusPill({ on, onLabel, offLabel }: { on: boolean; onLabel: string; o
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-        on ? "bg-[#228b22]/10 text-[#228b22]" : "bg-muted-surface text-muted"
+        on ? "bg-success/10 text-success" : "bg-muted-surface text-muted"
       }`}
     >
       <span
-        className={`h-1.5 w-1.5 rounded-full ${on ? "bg-[#228b22]" : "bg-muted"}`}
+        className={`h-1.5 w-1.5 rounded-full ${on ? "bg-success" : "bg-muted"}`}
         aria-hidden="true"
       />
       {on ? onLabel : offLabel}

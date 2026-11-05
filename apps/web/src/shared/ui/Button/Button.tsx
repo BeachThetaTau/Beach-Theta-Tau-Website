@@ -5,8 +5,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
 }
 
-const baseClasses =
-  "cursor-pointer rounded-full border-0 bg-brand px-5 py-2.5 text-base text-white transition-colors hover:bg-brand-dark";
+const baseClasses = "button";
 
 export function Button({ text, children, className = "", type = "button", ...props }: ButtonProps) {
   return (

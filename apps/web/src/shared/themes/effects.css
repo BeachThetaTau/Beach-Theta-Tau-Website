@@ -1,0 +1,47 @@
+@theme {
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgb(36 29 27 / 6%), 0 10px 24px rgb(36 29 27 / 7%);
+  --shadow-elevated: 0 20px 48px rgb(28 21 20 / 20%);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.25s ease both;
+  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  /* Sponsor logo marquee (SponsorCarousel) */
+  --animate-marquee: slide 35s infinite linear;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}

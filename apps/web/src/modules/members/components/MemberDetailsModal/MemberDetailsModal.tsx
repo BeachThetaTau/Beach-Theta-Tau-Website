@@ -62,7 +62,7 @@ export function MemberDetailsModal({ member, onClose }: MemberDetailsModalProps)
                       href={member.linkedIn}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2 rounded-full border-2 border-[#0072b1] bg-white px-4 py-1.5 text-sm font-bold text-[#0072b1] no-underline transition-colors duration-300 hover:bg-[#0072b1] hover:text-white"
+                      className="group inline-flex items-center gap-2 rounded-full border-2 border-linkedin bg-white px-4 py-1.5 text-sm font-bold text-linkedin no-underline transition-colors duration-300 hover:bg-linkedin hover:text-white"
                     >
                       <span>LinkedIn</span>
                       <FaLinkedin className="text-lg" aria-hidden="true" />

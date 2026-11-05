@@ -80,7 +80,7 @@ export function AdminDashboard() {
     loadingBid
       ? "bg-neutral-400 hover:translate-y-0 hover:shadow"
       : selected?.bidReceived
-        ? "bg-[#228b22] hover:bg-[#1f7a1f]"
+        ? "bg-success hover:bg-success-dark"
         : "bg-neutral-500 hover:bg-neutral-600",
   ].join(" ");
 

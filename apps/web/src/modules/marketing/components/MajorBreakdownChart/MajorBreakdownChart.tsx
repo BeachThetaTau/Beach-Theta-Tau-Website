@@ -8,26 +8,10 @@ import {
   type ChartOptions,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { getChartTheme } from "@/shared/themes/chartTheme";
 import { getMajorCounts } from "@/modules/members";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-const palette = [
-  "#7f170e",
-  "#eab308",
-  "#84322c",
-  "#672394",
-  "#0CB2C0",
-  "#F725A0",
-  "#3377DC",
-  "#FF5E78",
-  "#FFC857",
-  "#2E2F3A",
-  "#7A4EA3",
-  "#1DD1A1",
-  "#FF5CAF",
-  "#3498DB",
-];
 
 export function MajorBreakdownChart() {
   const [majors, setMajors] = useState<Record<string, number>>({});
@@ -44,6 +28,11 @@ export function MajorBreakdownChart() {
     };
   }, []);
 
+  const { palette, surface, muted, ink, fontFamily, fontSize, spacing } = useMemo(
+    getChartTheme,
+    [],
+  );
+
   const data = useMemo<ChartData<"doughnut">>(
     () => ({
       labels: Object.keys(majors),
@@ -56,11 +45,11 @@ export function MajorBreakdownChart() {
             (_, index) => palette[index % palette.length],
           ),
           borderWidth: 2,
-          borderColor: "#ffffff",
+          borderColor: surface,
         },
       ],
     }),
-    [majors],
+    [majors, palette, surface],
   );
 
   const options: ChartOptions<"doughnut"> = {
@@ -70,16 +59,16 @@ export function MajorBreakdownChart() {
       legend: {
         position: "bottom",
         labels: {
-          color: "#6a615d",
-          padding: 16,
-          font: { size: 14, family: "'alibaba-sans', sans-serif" },
+          color: muted,
+          padding: spacing * 4,
+          font: { size: fontSize, family: fontFamily },
         },
       },
       tooltip: {
         enabled: true,
-        backgroundColor: "#241d1b",
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
+        backgroundColor: ink,
+        titleColor: surface,
+        bodyColor: surface,
       },
     },
   };

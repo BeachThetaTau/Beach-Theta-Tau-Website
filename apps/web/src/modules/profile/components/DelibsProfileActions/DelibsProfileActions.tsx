@@ -8,7 +8,7 @@ const primaryButton =
 const outlineButton =
   "w-full rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-maroon transition-colors hover:border-maroon hover:bg-maroon hover:text-white disabled:cursor-not-allowed disabled:opacity-50";
 const dangerButton =
-  "w-full rounded-full border border-[#a52a2a] px-5 py-2.5 text-sm font-semibold text-[#a52a2a] transition-colors hover:bg-[#a52a2a] hover:text-white disabled:cursor-not-allowed disabled:opacity-50";
+  "w-full rounded-full border border-danger px-5 py-2.5 text-sm font-semibold text-danger transition-colors hover:bg-danger hover:text-white disabled:cursor-not-allowed disabled:opacity-50";
 
 export function DelibsProfileActions() {
   const navigate = useNavigate();
@@ -38,8 +38,8 @@ export function DelibsProfileActions() {
         <p className="text-xs font-semibold uppercase tracking-wider text-muted">Deliberations</p>
         {active ? (
           <>
-            <p className="mt-1 flex items-center gap-2 text-sm font-semibold text-[#228b22]">
-              <span className="h-2 w-2 rounded-full bg-[#228b22]" aria-hidden="true" />
+            <p className="mt-1 flex items-center gap-2 text-sm font-semibold text-success">
+              <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
               Session is live
             </p>
             <div className="mt-3 flex flex-col gap-2">

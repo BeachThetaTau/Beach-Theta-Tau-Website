@@ -1,0 +1,12 @@
+/* Tailwind spacing utilities (p-4, gap-6, etc.) share this base unit. */
+@theme static {
+  --spacing: 0.25rem;
+}
+
+:root {
+  --layout-page: 75rem;
+  --layout-narrow: 52rem;
+  --space-page-gutter: clamp(1.25rem, 4vw, 3rem);
+  --space-section: clamp(3.5rem, 7vw, 6.5rem);
+  --space-section-tight: clamp(2.5rem, 4.5vw, 4rem);
+}

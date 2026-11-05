@@ -9,92 +9,7 @@
 
 @import "tailwindcss";
 
-/*
-  Design tokens. Values exposed here become Tailwind utilities automatically,
-  e.g. --color-brand -> bg-brand/text-brand/border-brand,
-  --radius-md -> rounded-md, --shadow-card -> shadow-card.
-
-  The palette is a warm, maroon-anchored system: the fraternity red is the
-  spine, gold is a supporting accent, and every neutral is warmed slightly so
-  the greys read as stone rather than cold LCD grey.
-*/
-@theme {
-  /* Typography */
-  --font-sans:
-    "alibaba-sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
-
-  /* Brand reds — the primary identity */
-  --color-brand: #7f170e;
-  --color-brand-dark: #5c0f08;
-  --color-maroon: #84322c;
-  --color-maroon-dark: #6a2722;
-
-  /* Gold — supporting accent. `gold` for fills/underlines on any background,
-     `gold-ink` is the darker, legible version for gold text on light. */
-  --color-gold: #eab308;
-  --color-gold-ink: #9a6a12;
-
-  /* Warm neutral ramp */
-  --color-ink: #241d1b; /* headings */
-  --color-text: #34302e; /* body copy */
-  --color-muted: #6a615d; /* secondary / supporting copy */
-  --color-surface: #ffffff;
-  --color-surface-soft: #f8f4f2; /* faint warm off-white section */
-  --color-muted-surface: #ececec; /* standard tinted section background */
-  --color-panel: #e8dfda; /* cards / callout panels */
-  --color-line: #e5ddd8; /* hairline borders + dividers */
-  --color-footer: #1c1514; /* dark footer */
-  --color-footer-text: #cbc0ba;
-
-  /* Legacy token kept for compatibility */
-  --color-accent: #ef3063;
-
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
-
-  /* Elevation */
-  --shadow-card: 0 1px 2px rgb(36 29 27 / 6%), 0 10px 24px rgb(36 29 27 / 7%);
-  --shadow-elevated: 0 20px 48px rgb(28 21 20 / 20%);
-
-  /* Animations */
-  --animate-fade-in: fade-in 0.25s ease both;
-  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-
-  /* Sponsor logo marquee (SponsorCarousel) */
-  --animate-marquee: slide 35s infinite linear;
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(1.25rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
+@import "../themes/index.css";
 
 /* Base resets and defaults. */
 @layer base {
@@ -119,7 +34,7 @@
 
   ::selection {
     background: var(--color-brand);
-    color: #fff;
+    color: var(--color-surface);
   }
 
   :focus-visible {
@@ -151,24 +66,24 @@
   /* --- Layout --- */
   .container-page {
     width: 100%;
-    max-width: 75rem;
+    max-width: var(--layout-page);
     margin-inline: auto;
-    padding-inline: clamp(1.25rem, 4vw, 3rem);
+    padding-inline: var(--space-page-gutter);
   }
 
   .container-narrow {
     width: 100%;
-    max-width: 52rem;
+    max-width: var(--layout-narrow);
     margin-inline: auto;
-    padding-inline: clamp(1.25rem, 4vw, 3rem);
+    padding-inline: var(--space-page-gutter);
   }
 
   .section {
-    padding-block: clamp(3.5rem, 7vw, 6.5rem);
+    padding-block: var(--space-section);
   }
 
   .section-tight {
-    padding-block: clamp(2.5rem, 4.5vw, 4rem);
+    padding-block: var(--space-section-tight);
   }
 
   .section-muted {
@@ -178,9 +93,9 @@
   /* --- Type scale --- */
   .eyebrow {
     display: inline-block;
-    font-size: 0.875rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
     color: var(--color-brand);
   }
@@ -190,43 +105,43 @@
   }
 
   .display-title {
-    font-size: clamp(2.25rem, 5vw, 3.75rem);
-    font-weight: 800;
-    line-height: 1.04;
-    letter-spacing: -0.02em;
+    font-size: var(--text-display);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
     color: var(--color-ink);
   }
 
   .section-title {
-    font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-    font-weight: 800;
-    line-height: 1.12;
-    letter-spacing: -0.01em;
+    font-size: var(--text-section);
+    font-weight: var(--font-weight-extrabold);
+    line-height: var(--leading-section);
+    letter-spacing: var(--tracking-section);
     color: var(--color-ink);
   }
 
   .subsection-title {
-    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.005em;
+    font-size: var(--text-subsection);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-subsection);
+    letter-spacing: var(--tracking-subsection);
     color: var(--color-brand);
   }
 
   .lead {
-    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
-    line-height: 1.65;
+    font-size: var(--text-lead);
+    line-height: var(--leading-lead);
     color: var(--color-muted);
   }
 
   .prose-body {
-    font-size: 1.0625rem;
-    line-height: 1.75;
+    font-size: var(--text-prose);
+    line-height: var(--leading-prose);
     color: var(--color-text);
   }
 
   .prose-body > p + p {
-    margin-top: 1rem;
+    margin-top: calc(var(--spacing) * 4);
   }
 
   /* --- Surfaces & dividers --- */
@@ -251,7 +166,7 @@
   .accent-bar {
     height: 4px;
     width: 3.5rem;
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     background: var(--color-gold);
   }
 }

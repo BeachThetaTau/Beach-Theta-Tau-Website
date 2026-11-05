@@ -13,7 +13,7 @@ export function VoteResults({ candidateId }: { candidateId: string | null }) {
           <div className="mb-4">
             <div className="flex h-10 w-full overflow-hidden rounded-full shadow">
               <div
-                className="flex items-center justify-center bg-[#228b22] text-sm font-bold text-white transition-all max-md:text-xs"
+                className="flex items-center justify-center bg-success text-sm font-bold text-white transition-all max-md:text-xs"
                 style={{ width: `${totals.yesPercent}%` }}
               >
                 {totals.yesPercent > 0 && (
@@ -23,7 +23,7 @@ export function VoteResults({ candidateId }: { candidateId: string | null }) {
                 )}
               </div>
               <div
-                className="flex items-center justify-center bg-[#a52a2a] text-sm font-bold text-white transition-all max-md:text-xs"
+                className="flex items-center justify-center bg-danger text-sm font-bold text-white transition-all max-md:text-xs"
                 style={{ width: `${totals.noPercent}%` }}
               >
                 {totals.noPercent > 0 && (
@@ -33,7 +33,7 @@ export function VoteResults({ candidateId }: { candidateId: string | null }) {
                 )}
               </div>
               <div
-                className="flex items-center justify-center bg-[#708090] text-sm font-bold text-white transition-all max-md:text-xs"
+                className="flex items-center justify-center bg-abstain text-sm font-bold text-white transition-all max-md:text-xs"
                 style={{ width: `${totals.abstainPercent}%` }}
               >
                 {totals.abstainPercent > 0 && (
@@ -46,15 +46,15 @@ export function VoteResults({ candidateId }: { candidateId: string | null }) {
           </div>
           <div className="mb-4 flex flex-wrap justify-center gap-5 max-md:gap-4">
             <div className="flex items-center gap-2 text-sm text-text max-md:text-xs">
-              <span className="inline-block h-4 w-4 rounded-[2px] bg-[#228b22]" />
+              <span className="inline-block h-4 w-4 rounded-[2px] bg-success" />
               Yes ({totals.yesPercent}%)
             </div>
             <div className="flex items-center gap-2 text-sm text-text max-md:text-xs">
-              <span className="inline-block h-4 w-4 rounded-[2px] bg-[#a52a2a]" />
+              <span className="inline-block h-4 w-4 rounded-[2px] bg-danger" />
               No ({totals.noPercent}%)
             </div>
             <div className="flex items-center gap-2 text-sm text-text max-md:text-xs">
-              <span className="inline-block h-4 w-4 rounded-[2px] bg-[#708090]" />
+              <span className="inline-block h-4 w-4 rounded-[2px] bg-abstain" />
               Abstain ({totals.abstainPercent}%)
             </div>
           </div>

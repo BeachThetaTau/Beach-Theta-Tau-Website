@@ -1,0 +1,17 @@
+/* Canvas cannot resolve CSS variables; chartTheme.ts reads these at render time. */
+:root {
+  --chart-color-0: var(--color-brand);
+  --chart-color-1: var(--color-gold);
+  --chart-color-2: var(--color-maroon);
+  --chart-color-3: #672394;
+  --chart-color-4: #0cb2c0;
+  --chart-color-5: #f725a0;
+  --chart-color-6: #3377dc;
+  --chart-color-7: #ff5e78;
+  --chart-color-8: #ffc857;
+  --chart-color-9: #2e2f3a;
+  --chart-color-10: #7a4ea3;
+  --chart-color-11: #1dd1a1;
+  --chart-color-12: #ff5caf;
+  --chart-color-13: #3498db;
+}
