@@ -9,8 +9,7 @@ interface MemberGridProps {
 }
 
 /**
- * How grid photos load. Thumbnails are ~10-30 KB each, so "eager" (fetch them
- * all up front) is cheap for a chapter-sized roster. Switch to "lazy" to defer
+ * Fetch grid thumbnails up front for this chapter-sized roster. Switch to "lazy" to defer
  * offscreen photos until they near the viewport; compare the two on mobile.
  */
 const PHOTO_LOADING: "eager" | "lazy" = "eager";

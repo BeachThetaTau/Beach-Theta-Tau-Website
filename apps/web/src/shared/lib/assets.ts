@@ -20,6 +20,11 @@ for (const [path, url] of Object.entries(modules)) {
   if (brothersIndex >= 0) assets.set(normalizedPath.slice(brothersIndex), url);
 }
 
+/** Exact, quiet lookup for optional assets such as member photos. */
+export function findAssetUrl(name: string): string | undefined {
+  return assets.get(name.replace(/^\.?\//, ""));
+}
+
 export function assetUrl(name: string): string {
   const normalized = name.replace(/^\.?\//, "");
   const resolved = assets.get(normalized) ?? assets.get(normalized.split("/").at(-1) ?? "");

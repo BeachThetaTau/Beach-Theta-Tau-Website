@@ -3,7 +3,7 @@ import { logout } from "@/modules/auth";
 import { assetUrl } from "@/shared/lib/assets";
 import { EmptyState } from "@/shared/ui/EmptyState/EmptyState";
 import { LoadingState } from "@/shared/ui/LoadingState/LoadingState";
-import { memberPhotoUrl } from "@/modules/members";
+import { MemberPhoto } from "@/modules/members/components/MemberPhoto/MemberPhoto";
 import { ProfileForm } from "../components/ProfileForm/ProfileForm";
 import { ProfileView } from "../components/ProfileView/ProfileView";
 import { DelibsProfileActions } from "../components/DelibsProfileActions/DelibsProfileActions";
@@ -18,9 +18,6 @@ export function ProfilePage() {
     return <EmptyState title="Profile unavailable" description={profileState.error ?? undefined} />;
   }
 
-  const photoUrl =
-    assetUrl(memberPhotoUrl(profileState.profile)) || assetUrl("Brothers/blankpfp.webp");
-
   const handleLogout = async () => {
     try {
       await logout();
@@ -34,11 +31,13 @@ export function ProfilePage() {
     <section className="section">
       <div className="container-page grid items-start gap-10 md:grid-cols-[auto_minmax(0,1fr)] md:gap-14">
         <div className="flex flex-col items-center gap-4">
-          <img
-            className="aspect-[3/4] w-64 rounded-lg object-cover shadow-card"
-            src={photoUrl}
-            alt={`${profileState.profile.name || "Member"} profile`}
-          />
+          <div className="aspect-[3/4] w-64 overflow-hidden rounded-lg bg-panel shadow-card">
+            <MemberPhoto
+              key={profileState.profile.name}
+              member={profileState.profile}
+              size="full"
+            />
+          </div>
           <DelibsProfileActions />
           <button
             type="button"

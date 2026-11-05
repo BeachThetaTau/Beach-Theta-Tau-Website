@@ -2,9 +2,8 @@ import type { MemberProfile } from "@beach-theta-tau/contracts";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { assetUrl } from "@/shared/lib/assets";
 import Modal from "@/shared/ui/Modal/Modal";
-import { memberPhotoUrl, memberThumbUrl } from "../../utils/member-sorting";
+import { MemberPhoto } from "../MemberPhoto/MemberPhoto";
 
 interface MemberDetailsModalProps {
   member: MemberProfile | null;
@@ -12,10 +11,6 @@ interface MemberDetailsModalProps {
 }
 
 export function MemberDetailsModal({ member, onClose }: MemberDetailsModalProps) {
-  const fallback = assetUrl("Brothers/blank-pfp.webp");
-
-  const photoSrc = member ? assetUrl(memberPhotoUrl(member)) || fallback : "";
-
   return (
     <Modal isOpen={Boolean(member)} onClose={onClose} ariaLabel="Member details">
       {member && (
@@ -31,24 +26,8 @@ export function MemberDetailsModal({ member, onClose }: MemberDetailsModalProps)
 
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:gap-7 sm:text-left">
             <div className="w-64 flex-none sm:w-72">
-              <div
-                className="aspect-[3/4] overflow-hidden rounded-lg bg-panel bg-cover bg-center shadow-card"
-                style={{
-                  backgroundImage: `url("${assetUrl(memberThumbUrl(member)) || fallback}")`,
-                }}
-              >
-                <img
-                  key={member.uid ?? member.name}
-                  className="h-full w-full object-cover"
-                  src={photoSrc}
-                  width={900}
-                  height={1200}
-                  decoding="async"
-                  onError={(event) => {
-                    if (event.currentTarget.src !== fallback) event.currentTarget.src = fallback;
-                  }}
-                  alt={`${member.name}'s profile`}
-                />
+              <div className="aspect-[3/4] overflow-hidden rounded-lg bg-panel shadow-card">
+                <MemberPhoto key={member.uid ?? member.name} member={member} size="full" />
               </div>
             </div>
 

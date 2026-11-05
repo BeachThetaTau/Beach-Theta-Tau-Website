@@ -1,7 +1,6 @@
 import type { MemberProfile } from "@beach-theta-tau/contracts";
-import { assetUrl } from "@/shared/lib/assets";
 import { prefetchMemberPhoto } from "../../utils/member-photos";
-import { memberThumbUrl } from "../../utils/member-sorting";
+import { MemberPhoto } from "../MemberPhoto/MemberPhoto";
 
 interface MemberCardProps {
   member: MemberProfile;
@@ -13,10 +12,6 @@ interface MemberCardProps {
   onSelect: (member: MemberProfile) => void;
 }
 
-/** React 18 needs the lowercase fetch priority attribute. */
-const priorityHint = (highPriority: boolean) =>
-  (highPriority ? { fetchpriority: "high" } : {}) as Record<string, string>;
-
 export function MemberCard({
   member,
   showPosition = false,
@@ -24,8 +19,6 @@ export function MemberCard({
   highPriority = false,
   onSelect,
 }: MemberCardProps) {
-  const fallback = assetUrl("Brothers/blank-pfp.webp");
-
   const warmModalPhoto = () => prefetchMemberPhoto(member);
 
   return (
@@ -37,19 +30,11 @@ export function MemberCard({
       onFocus={warmModalPhoto}
     >
       <div className="aspect-[3/4] overflow-hidden rounded-lg bg-panel shadow-card">
-        <img
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-          src={assetUrl(memberThumbUrl(member)) || fallback}
-          width={400}
-          height={533}
+        <MemberPhoto
+          member={member}
           loading={loading}
-          {...priorityHint(highPriority)}
-          decoding="async"
-          onError={(event) => {
-            const image = event.currentTarget;
-            if (image.src !== fallback) image.src = fallback;
-          }}
-          alt={`${member.name}'s profile`}
+          highPriority={highPriority}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
         />
       </div>
       <h3 className="mt-3 text-lg font-bold leading-tight text-ink">{member.name}</h3>

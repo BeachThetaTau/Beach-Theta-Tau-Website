@@ -20,6 +20,7 @@
     "test": "npm run test --workspace @beach-theta-tau/web",
     "test:e2e": "playwright test",
     "emulators": "firebase emulators:start",
+    "optimize:member-photos": "tsx scripts/optimize-member-photos.ts",
     "seed:emulator": "tsx scripts/seed-emulator.ts"
   },
   "engines": {
