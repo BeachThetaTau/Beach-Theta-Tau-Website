@@ -1,6 +1,6 @@
 import ImageCarousel from "../components/ImageCarousel/ImageCarousel";
 import PageHero from "@/shared/ui/PageHero/PageHero";
-import SponsorCarousel from "../components/SponsorCarousel/SponsorCarousel";
+import CareerHighlightsMobile from "../components/CareerHighlightsMobile/CareerHighlightsMobile";
 import CareerHighlights from "../components/CareerHighlights/CareerHighlights";
 
 const supportCards = [
@@ -75,7 +75,7 @@ export function ProfessionalismPage() {
           <h2 className="section-title mt-3">Our members work at</h2>
           <div className="mt-10">
             <CareerHighlights />
-            <SponsorCarousel />
+            <CareerHighlightsMobile />
           </div>
         </div>
       </section>

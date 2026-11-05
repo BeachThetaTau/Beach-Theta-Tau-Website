@@ -2,12 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { assetUrl } from "@/shared/lib/assets";
 import { sponsorLogos } from "../../content/site-content";
 
-const rowDelays = [
-  "[transition-delay:0.25s]",
-  "[transition-delay:0.5s]",
-  "[transition-delay:0.75s]",
-  "[transition-delay:1s]",
-];
+const ROW_DELAY_SECONDS = 0.25;
 
 export function CareerHighlights() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -39,7 +34,8 @@ export function CareerHighlights() {
       >
         {rows.map((row, index) => (
           <ul
-            className={`m-0 flex list-none items-baseline justify-evenly pb-8 transition-opacity duration-[250ms] ease-in-out ${rowDelays[index]} ${isInView ? "opacity-100" : "opacity-0"}`}
+            className={`m-0 flex list-none items-baseline justify-evenly pb-8 transition-opacity duration-[250ms] ease-in-out ${isInView ? "opacity-100" : "opacity-0"}`}
+            style={{ transitionDelay: `${(index + 1) * ROW_DELAY_SECONDS}s` }}
             key={index}
           >
             {row.map(([src, alt]) => (

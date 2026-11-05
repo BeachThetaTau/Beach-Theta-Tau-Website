@@ -20,7 +20,7 @@ function LogoStrip({ duplicate = false }: { duplicate?: boolean }) {
   );
 }
 
-export function SponsorCarousel() {
+export function CareerHighlightsMobile() {
   return (
     <div
       className="group hidden overflow-hidden max-[1000px]:flex motion-reduce:overflow-x-auto"
@@ -34,4 +34,4 @@ export function SponsorCarousel() {
   );
 }
 
-export default SponsorCarousel;
+export default CareerHighlightsMobile;
