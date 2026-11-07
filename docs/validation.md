@@ -28,4 +28,4 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The first `npm install` creates the root `package-lock.json`; commit it, then change CI and deployment from `npm install` to `npm ci`.
+The lockfile is now committed and CI uses `npm ci`; see [`ci.md`](ci.md).

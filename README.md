@@ -28,7 +28,7 @@ cp apps/web/.env.example apps/web/.env.local
 npm run dev
 ```
 
-Commit the root `package-lock.json` created by the first install. CI currently uses `npm install` so the repository remains bootstrappable before that lockfile is generated; after committing it, switch CI and deployment workflows to `npm ci`.
+The root `package-lock.json` is committed and CI installs with `npm ci`. Use the Node version in `.nvmrc`.
 
 The web app runs at `http://localhost:5173` by default.
 
@@ -44,13 +44,11 @@ npm run seed:emulator
 ## Validation
 
 ```bash
-npm run build
-npm test
-npm run lint
-npm run test:e2e
+npm run verify    # lint, format check, tools type-check, unit tests, build
+npm run test:e2e  # Playwright (needs: npx playwright install chromium)
 ```
 
-See [`docs/validation.md`](docs/validation.md) for the checks completed during this refactor and the dependency-backed checks to run after installation.
+GitHub Actions runs the same checks on every pull request and push to `main`. See [`docs/ci.md`](docs/ci.md) for what each check does, how to run it locally, and known issues. [`docs/validation.md`](docs/validation.md) records the checks done during the original refactor.
 
 ## Environment variables
 
