@@ -11,4 +11,3 @@ export { setBidStatus } from "./deliberations/set-bid-status.js";
 export { aggregateVotes } from "./deliberations/aggregate-votes.js";
 export { exportResults } from "./deliberations/export-results.js";
 export { clearDeliberations } from "./deliberations/clear-deliberations.js";
-

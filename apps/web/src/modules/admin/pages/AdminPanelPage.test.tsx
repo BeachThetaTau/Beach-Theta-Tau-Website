@@ -6,9 +6,8 @@ import { AdminPanelPage } from "./AdminPanelPage";
 import * as delibsModule from "@/modules/deliberations";
 
 vi.mock("@/modules/deliberations", async () => {
-  const actual = await vi.importActual<typeof import("@/modules/deliberations")>(
-    "@/modules/deliberations"
-  );
+  const actual =
+    await vi.importActual<typeof import("@/modules/deliberations")>("@/modules/deliberations");
   return {
     ...actual,
     clearAllDeliberationsData: vi.fn(),
@@ -29,7 +28,7 @@ describe("AdminPanelPage", () => {
     const rendered = render(
       <BrowserRouter>
         <AdminPanelPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
     await waitFor(() => {
       expect(screen.queryByText("Loading members…")).not.toBeInTheDocument();
@@ -42,12 +41,12 @@ describe("AdminPanelPage", () => {
 
     expect(screen.getByRole("heading", { name: "Deliberations" })).toBeInTheDocument();
     expect(
-      screen.getByText("Open the deliberations board to select the active candidate and run voting.")
+      screen.getByText(
+        "Open the deliberations board to select the active candidate and run voting.",
+      ),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /start delibs/i })).toHaveAttribute("href", "/delibs");
-    expect(
-      screen.getByRole("button", { name: /delete all entries & votes/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /delete all entries & votes/i })).toBeInTheDocument();
   });
 
   it("opens confirmation modal and does not delete if user cancels", async () => {
@@ -88,7 +87,9 @@ describe("AdminPanelPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Successfully deleted 5 deliberation candidates and cleared votes for 12 members.")
+        screen.getByText(
+          "Successfully deleted 5 deliberation candidates and cleared votes for 12 members.",
+        ),
       ).toBeInTheDocument();
     });
   });
@@ -96,7 +97,7 @@ describe("AdminPanelPage", () => {
   it("displays error message if clearAllDeliberationsData fails", async () => {
     const user = userEvent.setup();
     vi.mocked(delibsModule.clearAllDeliberationsData).mockRejectedValue(
-      new Error("Permission denied")
+      new Error("Permission denied"),
     );
 
     await renderPage();
@@ -112,4 +113,3 @@ describe("AdminPanelPage", () => {
     });
   });
 });
-

@@ -16,7 +16,7 @@ The web application follows a vertical-feature structure. Business modules may u
 
 ## Requirements
 
-- Node.js 20 or newer
+- Node.js 22 or newer
 - npm 10 or newer
 - Firebase CLI for emulator and deployment commands
 

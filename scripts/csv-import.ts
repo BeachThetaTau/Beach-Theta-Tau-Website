@@ -51,7 +51,9 @@ async function run() {
   console.log(`📊 Headers detected: ${headers.join(", ")}`);
   console.log(`🔑 Using column '${idHeader}' as Document ID`);
   console.log(`🎯 Target Collection: '${collectionName}'`);
-  console.log(`🛡️  Empty field protection: ${keepEmpty ? "Disabled (blanks overwrite)" : "Enabled (blanks will not overwrite)"}\n`);
+  console.log(
+    `🛡️  Empty field protection: ${keepEmpty ? "Disabled (blanks overwrite)" : "Enabled (blanks will not overwrite)"}\n`,
+  );
 
   // Map to aggregate multi-row entries by ID
   const aggregatedData = new Map<string, Record<string, unknown>>();

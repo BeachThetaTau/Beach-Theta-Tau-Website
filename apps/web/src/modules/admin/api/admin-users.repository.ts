@@ -67,7 +67,6 @@ export async function adminUpdateUser(
   await updateDoc(doc(db, "users", uid), { ...data });
 }
 
-
 /**
  * Sets or clears a user's chapter position.
  */
@@ -175,4 +174,3 @@ export const adminRestoreGraduate = adminRestoreAlumni;
 export async function wipeUserVotes(uid: string): Promise<void> {
   await updateDoc(doc(db, "users", uid), { votes: {} });
 }
-

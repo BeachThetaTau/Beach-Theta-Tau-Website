@@ -71,8 +71,7 @@ export function parseCsvToRecords<T = Record<string, string>>(
   text: string,
   options: CsvRecordOptions = {},
 ): T[] {
-  const normalize =
-    options.normalizeHeader ?? ((h: string) => h.trim().toLowerCase());
+  const normalize = options.normalizeHeader ?? ((h: string) => h.trim().toLowerCase());
   const rawRows = parseCsv(text, options);
 
   if (rawRows.length === 0) return [];
@@ -139,7 +138,10 @@ export function createColumnFinder(headers: string[]) {
     /**
      * Returns a getter function for extracting the value from a raw record.
      */
-    matcher: (candidates: string[], fallback = ""): ((record: Record<string, string>) => string) => {
+    matcher: (
+      candidates: string[],
+      fallback = "",
+    ): ((record: Record<string, string>) => string) => {
       const match = normalizedHeaders.find(({ normalized }) =>
         candidates.some((c) => normalized.includes(c.toLowerCase())),
       );

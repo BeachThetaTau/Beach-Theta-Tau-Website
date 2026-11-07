@@ -78,7 +78,9 @@ export async function writeBatchToFirestore<T = Record<string, unknown>>({
     for (const item of chunk) {
       const docRef = db.collection(collection).doc(item.id);
       const payload = omitEmptyFields
-        ? (omitEmptyValues(item.data as Record<string, unknown>) as FirebaseFirestore.WithFieldValue<FirebaseFirestore.DocumentData>)
+        ? (omitEmptyValues(
+            item.data as Record<string, unknown>,
+          ) as FirebaseFirestore.WithFieldValue<FirebaseFirestore.DocumentData>)
         : (item.data as FirebaseFirestore.WithFieldValue<FirebaseFirestore.DocumentData>);
 
       batch.set(docRef, payload, { merge });
@@ -86,7 +88,9 @@ export async function writeBatchToFirestore<T = Record<string, unknown>>({
 
     await batch.commit();
     writtenCount += chunk.length;
-    logger(`  ✓ Committed batch ${batchIndex}/${numBatches} (${writtenCount}/${totalItems} documents)`);
+    logger(
+      `  ✓ Committed batch ${batchIndex}/${numBatches} (${writtenCount}/${totalItems} documents)`,
+    );
   }
 
   logger(`\n✨ Successfully committed ${writtenCount} document(s) to '${collection}'.\n`);

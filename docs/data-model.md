@@ -39,5 +39,3 @@ Archived / graduated member profile moved from the `users` collection when gradu
 - `name`, `email`, `major`, `class`, `gradYear`
 - `linkedIn`, `resumeLink`, `position`
 - `verified`, `graduatedAt`
-
-

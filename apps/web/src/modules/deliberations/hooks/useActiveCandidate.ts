@@ -25,4 +25,3 @@ export function useActiveCandidate() {
 
   return { candidateId, loading, error };
 }
-

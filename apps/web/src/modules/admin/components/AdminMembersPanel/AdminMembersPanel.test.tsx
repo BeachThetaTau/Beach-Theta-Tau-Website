@@ -114,9 +114,12 @@ describe("AdminMembersPanel", () => {
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(adminRepo.adminUpdateUser).toHaveBeenCalledWith("user-2", expect.objectContaining({
-        position: "Treasurer",
-      }));
+      expect(adminRepo.adminUpdateUser).toHaveBeenCalledWith(
+        "user-2",
+        expect.objectContaining({
+          position: "Treasurer",
+        }),
+      );
     });
   });
 
@@ -135,10 +138,13 @@ describe("AdminMembersPanel", () => {
 
     expect(window.confirm).toHaveBeenCalled();
     await waitFor(() => {
-      expect(adminRepo.adminGraduateUser).toHaveBeenCalledWith("user-1", expect.objectContaining({
-        uid: "user-1",
-        name: "Alex Smith",
-      }));
+      expect(adminRepo.adminGraduateUser).toHaveBeenCalledWith(
+        "user-1",
+        expect.objectContaining({
+          uid: "user-1",
+          name: "Alex Smith",
+        }),
+      );
       expect(screen.queryByText("Alex Smith")).not.toBeInTheDocument();
     });
   });
@@ -184,10 +190,13 @@ describe("AdminMembersPanel", () => {
 
     expect(window.confirm).toHaveBeenCalled();
     await waitFor(() => {
-      expect(adminRepo.adminRestoreAlumni).toHaveBeenCalledWith("alum-1", expect.objectContaining({
-        uid: "alum-1",
-        name: "Taylor Old",
-      }));
+      expect(adminRepo.adminRestoreAlumni).toHaveBeenCalledWith(
+        "alum-1",
+        expect.objectContaining({
+          uid: "alum-1",
+          name: "Taylor Old",
+        }),
+      );
       expect(screen.queryByText("Taylor Old")).not.toBeInTheDocument();
     });
   });

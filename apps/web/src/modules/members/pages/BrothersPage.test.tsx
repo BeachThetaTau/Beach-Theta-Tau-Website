@@ -7,6 +7,12 @@ import * as repo from "../api/members.repository";
 
 vi.mock("../api/members.repository");
 vi.mock("@/shared/ui/PageHero/PageHero", () => ({ default: () => <div data-testid="hero" /> }));
+// Portraits render as <img> only when the file exists in the build, and only real members'
+// photos are committed. Stub the lookup so the test does not depend on photo fixtures.
+vi.mock("@/shared/lib/assets", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/shared/lib/assets")>()),
+  findAssetUrl: (name: string) => `/test-assets/${name}`,
+}));
 
 const members: MemberProfile[] = [
   { uid: "1", name: "Alex Smith", class: "Alpha", major: "Computer Science", verified: true },
@@ -60,7 +66,7 @@ describe("BrothersPage loading", () => {
     vi.mocked(repo.getVerifiedMembers).mockResolvedValue(members);
     renderPage();
     const image = await screen.findByAltText("Alex Smith's profile");
-    expect(image.getAttribute("src")).toMatch(/\.webp$/);
+    expect(image).toHaveAttribute("src", "/test-assets/members/BrothersThumbs/alexsmith.webp");
     expect(image).toHaveAttribute("loading", "eager");
     expect(image).toHaveAttribute("width", "400");
   });

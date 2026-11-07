@@ -27,7 +27,7 @@
     "verify": "npm run lint && npm run format:check && npm run typecheck:tools && npm test && npm run build"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

@@ -82,4 +82,3 @@ export function useBallot() {
     activeCandidateId: active.candidateId,
   };
 }
-

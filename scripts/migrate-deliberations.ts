@@ -93,7 +93,9 @@ async function run() {
     candidates.set(email, candidate);
   }
 
-  console.log(`\n📋 Processed ${records.length} CSV rows (${skippedRows} skipped without valid email).`);
+  console.log(
+    `\n📋 Processed ${records.length} CSV rows (${skippedRows} skipped without valid email).`,
+  );
   console.log(`Found ${candidates.size} unique candidate(s).\n`);
 
   const sortedCandidates = Array.from(candidates.entries()).sort((a, b) =>
