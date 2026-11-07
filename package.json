@@ -30,10 +30,10 @@
     "node": ">=22"
   },
   "devDependencies": {
-    "@eslint/js": "^9.33.0",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.54.2",
-    "eslint": "^9.33.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
